@@ -38,16 +38,14 @@ QByteArray  paintSquiggles( const QString& id,  const QString& colorImagePath,  
                             double thickness, double sharpness );
 
 QByteArray paintClouds( const QString& id,  int size, int symmmetryGroup, int col1Red, int col1Green, int col1Blue,
-                        int col2Red,
-                        int col2Green, int col2Blue, int col3Red, int col3Green, int col3Blue, int randfuncsIndex );
+                        int col2Red, int col2Green, int col2Blue, int col3Red, int col3Green, int col3Blue, int randfuncsIndex );
 
 
 QByteArray paintHyperbolicClouds( const QString& id, int size, int fdfIndex, int rotation0, int rotation1,
-                                  int rotation2,
-                                  int rotation3, int projType, int col1Red, int col1Green, int col1Blue, int col2Red, int col2Green, int col2Blue,
-                                  int col3Red, int col3Green, int col3Blue, int randfuncsIndex );
+                                  int rotation2, int rotation3, int projType, int col1Red, int col1Green, int col1Blue, int col2Red, int col2Green,
+                                  int col2Blue, int col3Red, int col3Green, int col3Blue, int randfuncsIndex );
 
-QByteArray paintLines( const QString& id,   int size, int symmmetryGroup, int ncolors,
+QByteArray paintLines( const QString& id, int size, int symmmetryGroup, int ncolors,
                        const QString& ruleName1, int weight1, bool isPastel1,
                        const QString& ruleTName, int weight2, bool isPastel2,
                        const QString& ruleName3, int weight3, bool isPastel3 );
@@ -65,8 +63,7 @@ QByteArray paintStripes( const QString& id,  int sz, int symGroup, double alpha 
 QByteArray paintClusters( const QString& id,  int sz, int symGroup, double alpha );
 
 QByteArray paintHyperbolicLines( const QString& id,  int size, int fdfIndex, int rotation0, int rotation1,
-                                 int rotation2,
-                                 int rotation3, int projType, int flipType, float thickness, float sharpness, int ncolors );
+                                 int rotation2, int rotation3, int projType, int flipType, float thickness, float sharpness, int ncolors );
 
 QByteArray paintQuasiperiodicStripes( const QString& id,  int size, int fftsize, double alpha );
 
@@ -81,8 +78,7 @@ QByteArray drawQuasiTrap( const QString& id,  int width, int height, int symmetr
 QByteArray drawQuasiTrapPoly( const QString& id,  int width, int height, int symmetry, double quasiperiod );
 
 QByteArray caGenerateImage( const QString& id,  int width, int height, int ruleIndex, int left, int top, int right,
-                            int bottom,
-                            int nturns, double intensity );
+                            int bottom, int nturns, double intensity );
 
 QByteArray caContinue( const QString& id,  int nturns, double intensity );
 

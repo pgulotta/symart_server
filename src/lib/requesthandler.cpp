@@ -21,8 +21,6 @@ public:
 
   void init( size_t nthreads )
   {
-//    auto opts = Pistache::Http::Endpoint::options().threads( static_cast < int > ( nthreads )  );
-//    httpEndpoint->init( opts );
     httpEndpoint->init( Pistache::Http::Endpoint::options().threads( static_cast < int > ( nthreads )  ) );
     setupRoutes();
   }
@@ -35,7 +33,16 @@ public:
 
   void initDrawingTestFuncs()
   {
+    drawingTestFuncs[std::string{"ca" }] =  []() { return caGenerateImage( "test", 600, 600, 3, 295, 295, 305, 305, 300, 2.5  );};
+    drawingTestFuncs[std::string{"clouds" }] =  []() {
+      return paintClouds( "test",  256, 9, 111, 123, 150, 90, 190, 200, 55, 178, 222, 1 );
+    };
     drawingTestFuncs[std::string{"clusters" }] =  []() { return paintClusters( "test", 400, 3, 1.50 );};
+    drawingTestFuncs[std::string{"hyperbolicClouds" }] =  []() {
+      return paintHyperbolicClouds( "test",  256, 2, 3, 2, 2, 2, 1, 111, 123, 150, 90, 190, 200, 55, 178, 222, 1 );
+    };
+    drawingTestFuncs[std::string{"hyperbolicLines" }] =  []() { return paintHyperbolicLines( "test",  400, 2, 3, 2, 2, 2, 1, 1, 1.0, 1.50,  11 );};
+    drawingTestFuncs[std::string{"lines" }] =  []() { return paintLines( "test", 400, 13, 5, "Line", 2, true, "Curl", 4, true, "Beads", 6, true  );};
     drawingTestFuncs[std::string{"quasiPeriodicStripes" }] =  []() { return paintQuasiperiodicStripes( "test", 400, 20, 1.5 );};
     drawingTestFuncs[std::string{"quasiTrap" }] =  []() { return drawQuasiTrap( "test", 800, 800, 8,  66.6 );};
     drawingTestFuncs[std::string{"quasiTrapPoly" }] =  []() { return drawQuasiTrapPoly( "test", 800, 800, 7,  44.4 );};
