@@ -1,6 +1,7 @@
 ﻿#include "requesthandler.hpp"
 #include "shared/symart_service.hpp"
 #include <QImage>
+#include <QStringList>
 #include <thread>
 #include <iostream>
 #include <limits>
@@ -9,6 +10,7 @@
 #include <pistache/endpoint.h>
 
 typedef std::function<QByteArray( void )> drawingTestFunc;
+typedef std::function<QByteArray( QStringList& )> drawingGenerateFunc;
 
 class SymArtEndpoint
 {
@@ -17,6 +19,7 @@ public:
     : httpEndpoint( std::make_shared<Pistache::Http::Endpoint>( addr ) )
   {
     initDrawingTestFuncs();
+    initDrawingGenerateFuncs();
   }
 
   void init( size_t nthreads )
@@ -29,6 +32,22 @@ public:
   {
     httpEndpoint->setHandler( router.handler() );
     httpEndpoint->serve();
+  }
+
+//  QByteArray trap( QStringList& list )
+//  {
+//    return drawTrap( "test", list[1].toInt(), list[2].toInt() );
+//  }
+
+  void initDrawingGenerateFuncs()
+  {
+//    drawingGenerateFunc func = [ = ]( QStringList & list ) { return trap( list  );};
+//    drawingGenerateFunc[std::string{"trap" }] = func;
+//    drawingGenerateFuncs.emplace( "trap", func );
+    // drawingGenerateFuncs.emplace( "trap",  [ = ]( QStringList & list ) { return trap( list  );} );
+//http://localhost:9080/generate/?trap/200/5
+    drawingGenerateFuncs.emplace( "trap",  [ = ]( QStringList & list ) {  return drawTrap( "test", list[1].toInt(), list[2].toInt() );  } );
+
   }
 
   void initDrawingTestFuncs()
@@ -55,31 +74,6 @@ public:
 
 
 private:
-  void handleTest( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
-  {
-    bool success = false;
-
-    // example:  http://localhost:9080/test/?quasiPeriodicStripes
-    if ( request.method() == Pistache::Http::Method::Get ) {
-      auto param = request.query().parameters()[0];
-
-      if ( drawingTestFuncs.find( param ) != drawingTestFuncs.end() ) {
-        QByteArray bytes {drawingTestFuncs[param]()};
-        auto stream = response.stream( Pistache::Http::Code::Ok );
-        stream.write( bytes, bytes.size() );
-        stream.flush();
-        stream.ends();
-        success = true;
-      }
-    }
-
-    if ( !success ) {
-      response.send( Pistache::Http::Code::Bad_Request,
-                     "This is not a valid request. To test the API, enter the request: /ready" );
-
-    }
-  }
-
   void handleReady( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
   {
     QByteArray bytes{"Available test API:\n"};
@@ -97,16 +91,73 @@ private:
     response.send( Pistache::Http::Code::Ok,  request.query().as_str() );
   }
 
-  void handleDraw( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
+  void handleTest( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
   {
-    response.send( Pistache::Http::Code::Ok,  request.query().as_str() );
+    bool success = false;
+
+    try {
+      // example:  http://localhost:9080/test/?quasiPeriodicStripes
+      if ( request.method() == Pistache::Http::Method::Get ) {
+        auto functionId = request.query().parameters()[0];
+
+        if ( drawingTestFuncs.find( functionId ) != drawingTestFuncs.end() ) {
+          QByteArray bytes {drawingTestFuncs[functionId]()};
+          auto stream = response.stream( Pistache::Http::Code::Ok );
+          stream.write( bytes, bytes.size() );
+          stream.flush();
+          stream.ends();
+          success = true;
+        }
+      }
+    } catch ( const std::exception ) { }
+
+
+    if ( !success ) {
+      response.send( Pistache::Http::Code::Bad_Request, request.query().as_str() +
+                     " is not a valid 'test' request. To test the API, enter the request: /ready" );
+    }
+  }
+
+  void handleGenerate( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
+  {
+//  http://localhost:9080/generate/?trap/
+    bool success = false;
+
+    try {
+      // example:  http://localhost:9080/test/?quasiPeriodicStripes
+      if ( request.method() == Pistache::Http::Method::Get ) {
+        auto query{request.query().parameters()[0]};
+
+        if ( query.length() > 0 ) {
+          QString params = query.c_str();
+          QStringList list =  params.split( '/', QString::SkipEmptyParts );
+          auto functionId = list[0];
+
+          if ( drawingGenerateFuncs.find( functionId ) != drawingGenerateFuncs.end() ) {
+            QByteArray bytes {drawingGenerateFuncs[functionId]( list )};
+            auto stream = response.stream( Pistache::Http::Code::Ok );
+            stream.write( bytes, bytes.size() );
+            stream.flush();
+            stream.ends();
+            success = true;
+          }
+        }
+      }
+    } catch ( const std::exception ) { }
+
+
+    if ( !success ) {
+      response.send( Pistache::Http::Code::Bad_Request, request.query().as_str() +
+                     " is not a valid 'generate' request. To test the API, enter the request: /ready" );
+
+    }
   }
 
   void setupRoutes()
   {
     using namespace Pistache::Rest;
     Routes::Get( router, "/ready", Routes::bind( &SymArtEndpoint::handleReady, this ) );
-    Routes::Get( router, "/draw",  Routes::bind( &SymArtEndpoint::handleDraw,  this ) );
+    Routes::Get( router, "/generate",  Routes::bind( &SymArtEndpoint::handleGenerate,  this ) );
     Routes::Get( router, "/test",  Routes::bind( &SymArtEndpoint::handleTest,  this ) );
   }
 
@@ -115,6 +166,7 @@ private:
   std::shared_ptr< Pistache::Http::Endpoint> httpEndpoint;
   Pistache::Rest::Router router;
   std::map<std::string, drawingTestFunc> drawingTestFuncs;
+  std::map<QString, drawingGenerateFunc> drawingGenerateFuncs;
 };
 
 
