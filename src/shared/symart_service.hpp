@@ -9,6 +9,10 @@ class ImageData;
 
 const QString DefaultId{"defaultId"};
 
+bool toBool( const QString& text );
+
+QString fromBool( bool text );
+
 bool canTileImage( const QString& id );
 
 bool isSymmetricView( const QString& id );
@@ -33,8 +37,7 @@ QByteArray  paintSquiggles( const QString& id,  int ncolors, int size, int symGr
                             double thickness, double sharpness );
 
 QByteArray  paintSquiggles( const QString& id,  const QString& colorImagePath,  double saturationBoost, bool useHue,
-                            bool useSaturation,
-                            bool useLightness, int ncolors, int size, int symGroup, double alpha, double exponent,
+                            bool useSaturation, bool useLightness, int ncolors, int size, int symGroup, double alpha, double exponent,
                             double thickness, double sharpness );
 
 QByteArray paintClouds( const QString& id,  int size, int symmmetryGroup, int col1Red, int col1Green, int col1Blue,
@@ -67,9 +70,9 @@ QByteArray paintHyperbolicLines( const QString& id,  int size, int fdfIndex, int
 
 QByteArray paintQuasiperiodicStripes( const QString& id,  int size, int fftsize, double alpha );
 
-QByteArray drawWalk( const QString& id,  int width, int height, bool balanced, int walkFill );
+QByteArray drawWalk( const QString& id, int width, int height, bool balanced, int walkFill );
 
-QByteArray drawWalk2( const QString& id,   int width, int height, bool balanced, int walkFill );
+QByteArray drawWalk2( const QString& id, int width, int height, bool balanced, int walkFill );
 
 QByteArray drawTrap( const QString& id,  int sz, int symGroup );
 

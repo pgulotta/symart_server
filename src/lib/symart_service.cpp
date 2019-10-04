@@ -7,6 +7,10 @@
 
 static RequestDispatcher requestDispatcher;
 
+bool toBool( const QString& text ) {return text == "false" ? false : true;  }
+
+QString fromBool( bool text ) {return text == false ? "false" : "true";  }
+
 QByteArray toByteArray( const QImage& image )
 {
   return requestDispatcher.toByteArray( image ) ;
