@@ -122,8 +122,6 @@ public :
 
     drawingGetFuncs.emplace( "updateSquiggles",  [ = ]( QStringList & list ) {  return updateSquiggles( list[1], list[2].toInt(), list[3].toInt() );  } );
 
-
-
     drawingGetFuncs.emplace( "walk",  [ = ]( QStringList & list ) {  return drawWalk( list[1], list[2].toInt(), list[3].toInt(), toBool( list[4] ), list[5].toInt()  );  } );
 
     drawingGetFuncs.emplace( "walk2",  [ = ]( QStringList & list ) {  return drawWalk2( list[1], list[2].toInt(), list[3].toInt(), toBool( list[4] ), list[5].toInt()  );  } );

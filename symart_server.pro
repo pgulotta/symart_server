@@ -11,11 +11,6 @@ CONFIG -=  app_bundle
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
-
-#SOURCES += $$files(rest_server.cpp, true)
-#SOURCES += $$files(requesthandler.cpp, true)
-#SOURCES += $$files(requesthandler.hpp, true)
-
 HEADERS += $$files(*.hpp, true)
 SOURCES += $$files(*.cpp, true)
 
