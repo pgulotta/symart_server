@@ -149,7 +149,7 @@ public :
     drawingTestFuncs.emplace( "quasiTrapPoly", []() { return drawQuasiTrapPoly( "test", 800, 800, 7,  44.4 );} );
     drawingTestFuncs.emplace( "squiggles",  []() { return paintSquiggles( "test", 15, 512, 10, 1.3, 1.50, 1.3, 1.5 );} );
     drawingTestFuncs.emplace( "stripes",  []() { return paintStripes( "test", 600, 5, .50 );} );
-    drawingTestFuncs.emplace( "trap", []() { return drawTrap( "test", 500, 2 );} );
+    drawingTestFuncs.emplace( "trap", []() { return drawTrap( "test", 144, 2 );} );
     drawingTestFuncs.emplace( "walk", []() { return drawWalk( "test", 200, 400, true, 0 );} );
     drawingTestFuncs.emplace( "walk2", []() { return drawWalk( "test", 400, 200, false, 1 );} );
   }
