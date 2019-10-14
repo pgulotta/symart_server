@@ -21,7 +21,7 @@
 #ifndef _HYPERBOLIC_CONVERTER_H
 #define _HYPERBOLIC_CONVERTER_H
 
-#include "shared/color.hpp"
+#include "color.hpp"
 #include "hyperbolic_group.hpp"
 #include "interpolate.hpp"
 #include "symmetric_canvas.hpp"

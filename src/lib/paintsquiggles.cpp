@@ -22,7 +22,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
-#include "shared/randgen.hpp"
+#include "randgen.hpp"
 #include "stripes_common.hpp"
 #include "generators.hpp"
 #include "layer.hpp"

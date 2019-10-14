@@ -24,7 +24,7 @@
 #include <tuple>
 #include <vector>
 #include "canvas.hpp"
-#include "shared/color.hpp"
+#include "color.hpp"
 
 template<typename T>
 class ca_canvas

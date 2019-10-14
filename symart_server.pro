@@ -14,11 +14,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 HEADERS += $$files(*.hpp, true)
 SOURCES += $$files(*.cpp, true)
 
-
-
 INCLUDEPATH += $$PWD/src
-INCLUDEPATH += /home/pat/Source/GitHub/pistache/build/src
-
 
 LIBS += -lpistache
 LIBS += -pthread

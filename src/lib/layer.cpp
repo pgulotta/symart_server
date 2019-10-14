@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "layer.hpp"
-#include "shared/randgen.hpp"
+#include "randgen.hpp"
 
 using namespace std;
 

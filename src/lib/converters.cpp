@@ -18,7 +18,7 @@
  *   02110-1301  USA                                                       *
  ***************************************************************************/
 
-#include "shared/color.hpp"
+#include "color.hpp"
 #include "hyperbolic_group.hpp"
 #include "hyperbolic_polygons.hpp"
 #include "interpolate.hpp"

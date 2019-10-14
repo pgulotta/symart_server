@@ -22,7 +22,7 @@
 #define _INTERPOLATE_H
 
 #include "canvas.hpp"
-#include "shared/color.hpp"
+#include "color.hpp"
 
 typedef std::vector<std::tuple<int, int, double>> interpolation_list;
 

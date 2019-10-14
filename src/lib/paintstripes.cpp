@@ -20,7 +20,7 @@
 
 #ifdef FFTWPROGS
 #include "stripes_common.hpp"
-#include "shared/randgen.hpp"
+#include "randgen.hpp"
 #include "generators.hpp"
 #include "imagedata.hpp"
 #include <complex>

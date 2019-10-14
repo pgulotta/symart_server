@@ -23,7 +23,7 @@
 
 #include <memory>
 #include "canvas.hpp"
-#include "shared/color.hpp"
+#include "color.hpp"
 
 struct layer {
   layer() : pixels( nullptr ), color( black ), pastel( false ) {}

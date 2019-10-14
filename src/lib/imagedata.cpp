@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "imagedata.hpp"
-#include "shared/color.hpp"
+#include "color.hpp"
 #include <QBuffer>
 
 QImage makeImage( const CanvasView<color_t>& v )

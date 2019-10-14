@@ -21,8 +21,8 @@
 #ifndef _PAINTCLOUDS_H
 #define _PAINTCLOUDS_H
 
-#include "shared/randgen.hpp"
-#include "shared/color.hpp"
+#include "randgen.hpp"
+#include "color.hpp"
 #include "hyperbolic_group.hpp"
 #include "symmetric_canvas.hpp"
 

@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #ifdef FFTWPROGS
-#include "shared/randgen.hpp"
+#include "randgen.hpp"
 #include "stripes_common.hpp"
 #include <random>
 

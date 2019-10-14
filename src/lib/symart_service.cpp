@@ -1,4 +1,4 @@
-﻿#include "shared/symart_service.hpp"
+﻿#include "symart_service.hpp"
 #include "requestdispatcher.hpp"
 #include <QImage>
 #include <QBuffer>

@@ -19,8 +19,8 @@
  ***************************************************************************/
 
 #include "paintlines.hpp"
-#include "shared/color.hpp"
-#include "shared/randgen.hpp"
+#include "color.hpp"
+#include "randgen.hpp"
 #include <cmath>
 #include <queue>
 

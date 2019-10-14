@@ -22,7 +22,7 @@
 #define _SYMMETRY_H
 
 
-#include "shared/symart_common.hpp"
+#include "symart_common.hpp"
 
 template<typename T>
 using point = std::tuple<T, T>;

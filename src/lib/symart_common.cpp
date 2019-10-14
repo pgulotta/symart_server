@@ -1,4 +1,4 @@
-﻿#include "shared/symart_common.hpp"
+﻿#include "symart_common.hpp"
 #include "lib/hyperbolic_group.hpp"
 
 

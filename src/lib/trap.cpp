@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "generators.hpp"
-#include "shared/randgen.hpp"
+#include "randgen.hpp"
 #include "imagedata.hpp"
 #include <complex>
 

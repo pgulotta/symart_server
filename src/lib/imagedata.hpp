@@ -25,7 +25,7 @@
 #include <vector>
 #include <QImage>
 
-#include "shared/color.hpp"
+#include "color.hpp"
 #include "canvasview.hpp"
 #include "paintlinesadapter.hpp"
 

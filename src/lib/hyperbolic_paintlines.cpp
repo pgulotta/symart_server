@@ -22,7 +22,7 @@
 #include <memory>
 #include <limits>
 #include "generators.hpp"
-#include "shared/randgen.hpp"
+#include "randgen.hpp"
 #include "layer.hpp"
 #include "imagedata.hpp"
 

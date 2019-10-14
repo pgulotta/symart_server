@@ -22,7 +22,7 @@
 #include <numeric>
 #include <tuple>
 #include <vector>
-#include "shared/randgen.hpp"
+#include "randgen.hpp"
 #include "generators.hpp"
 #include "imagedata.hpp"
 

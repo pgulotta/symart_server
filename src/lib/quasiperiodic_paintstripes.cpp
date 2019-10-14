@@ -22,7 +22,7 @@
 
 #include <cmath>
 #include <memory>
-#include "shared/randgen.hpp"
+#include "randgen.hpp"
 #include "imagedata.hpp"
 #include "generators.hpp"
 #include "fftw_cxx.hpp"

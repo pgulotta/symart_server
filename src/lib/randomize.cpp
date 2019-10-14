@@ -18,7 +18,7 @@
  *   02110-1301  USA                                                       *
  ***************************************************************************/
 
-#include "shared/randgen.hpp"
+#include "randgen.hpp"
 #include "randomize.hpp"
 #include <tuple>
 

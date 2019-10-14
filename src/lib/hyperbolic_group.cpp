@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include <algorithm>
-#include "shared/randgen.hpp"
+#include "randgen.hpp"
 #include "hyperbolic_group.hpp"
 
 using namespace std;

@@ -1,5 +1,5 @@
 ﻿#include "requesthandler.hpp"
-#include "shared/symart_service.hpp"
+#include "symart_service.hpp"
 #include <QImage>
 #include <QStringList>
 #include <thread>

@@ -21,7 +21,7 @@
 #ifndef _HYPERBOLIC_H
 #define _HYPERBOLIC_H
 
-#include "shared/symart_common.hpp"
+#include "symart_common.hpp"
 
 struct hyperbolic_coord {
   hyperbolic_coord( double _x, double _y, double _z ) : x( _x ), y( _y ), z( _z ) {}

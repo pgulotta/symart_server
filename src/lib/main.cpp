@@ -6,7 +6,7 @@
 #include <pistache/endpoint.h>
 #include <pistache/common.h>
 #include "requesthandler.hpp"
-#include "shared/symart_service.hpp"
+#include "symart_service.hpp"
 #include <QImage>
 
 

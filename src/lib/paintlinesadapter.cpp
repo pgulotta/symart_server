@@ -2,7 +2,7 @@
 #include "imagedata.hpp"
 #include "paintlines.hpp"
 #include "layer.hpp"
-#include "shared/color.hpp"
+#include "color.hpp"
 
 #include <QString>
 #include <QImage>

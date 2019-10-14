@@ -21,7 +21,7 @@
 #pragma once
 
 #include "canvas.hpp"
-#include "shared/color.hpp"
+#include "color.hpp"
 #include "hyperbolic_group.hpp"
 #include "symmetric_canvas.hpp"
 
