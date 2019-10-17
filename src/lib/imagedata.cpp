@@ -25,6 +25,10 @@
 QImage makeImage( const CanvasView<color_t>& v )
 {
   const auto& src = *( v.canvas_view );
+
+  if ( v.canvas_view == nullptr || src.width() == 0 || src.height() == 0 )
+    return  QImage{};
+
   QImage image( src.width(), src.height(), QImage::Format_RGB32 );
 
   for ( int j = 0; j < src.height(); j++ )
