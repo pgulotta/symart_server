@@ -21,9 +21,9 @@ QImage fromByteArray( const QByteArray& ba  )
   return  requestDispatcher.fromByteArray( ba );
 }
 
-QByteArray originalImage( const QString& id )
+QByteArray lastGeneratedImage( const QString& id )
 {
-  return requestDispatcher.originalImage( id );
+  return requestDispatcher.lastGeneratedImage( id );
 }
 
 QByteArray hexagonalStretch( const QString& id )

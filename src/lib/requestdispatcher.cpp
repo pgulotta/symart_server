@@ -32,7 +32,7 @@ QImage RequestDispatcher::fromByteArray( const QByteArray& ba  )
   return image;
 }
 
-QByteArray RequestDispatcher::originalImage( const QString& id )
+QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )
 {
   return toByteArray( QImage{makeImage( getImageData( id ).img )} );
 }

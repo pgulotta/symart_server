@@ -22,7 +22,7 @@ public:
 
   bool isSymmetricView( const QString& id );
 
-  QByteArray originalImage( const QString& id );
+  QByteArray lastGeneratedImage( const QString& id );
 
   QByteArray hexagonalStretch( const QString& id );
 

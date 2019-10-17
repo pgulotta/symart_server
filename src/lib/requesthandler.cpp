@@ -50,7 +50,7 @@ public :
     //  example:  http://localhost:9080/get/?trap/id123/200/5  http://localhost:9080/get/?walk2/id123/400/200/false/1  http://localhost:9080/get/?hexagonalStretch/id123
     drawingGetFuncs.clear();
 
-    drawingGetFuncs.emplace( "original",  [ = ]( QStringList & list ) {  return originalImage( list[1] );  } );
+    drawingGetFuncs.emplace( "lastImage",  [ = ]( QStringList & list ) {  return lastGeneratedImage( list[1] );  } );
 
     drawingGetFuncs.emplace( "hexagonalStretch",  [ = ]( QStringList & list ) {  return hexagonalStretch( list[1] );  } );
 

@@ -21,7 +21,7 @@ QByteArray toByteArray( const QImage& image );
 
 QImage fromByteArray( const QByteArray& ba );
 
-QByteArray originalImage( const QString& id );
+QByteArray lastGeneratedImage( const QString& id );
 
 QByteArray hexagonalStretch( const QString& id );
 
