@@ -39,7 +39,7 @@ public :
 
   void initPredicateFuncs()
   {
-    //  example:  http://localhost:9080/ask/?canTileImage/id123
+    //  example:  http://localhost:60564/ask?canTileImage/id123
     predicateFuncs.clear();
     predicateFuncs.emplace( "canTileImage",  [ = ]( QString & item ) {  return fromBool( canTileImage( item ) ).toLatin1();} );
     predicateFuncs.emplace( "isSymmetricView",  [ = ]( QString & item ) {  return fromBool( isSymmetricView( item ) ).toLatin1();} );
@@ -47,7 +47,7 @@ public :
 
   void initDrawingGetFuncs()
   {
-    //  example:  http://localhost:9080/get/?trap/id123/200/5  http://localhost:9080/get/?walk2/id123/400/200/false/1  http://localhost:9080/get/?hexagonalStretch/id123
+    //  example:  http://localhost:60564/get?trap/id123/200/5  http://localhost:60564/get?walk2/id123/400/200/false/1  http://localhost:60564/get?hexagonalStretch/id123
     drawingGetFuncs.clear();
 
     drawingGetFuncs.emplace( "lastImage",  [ = ]( QStringList & list ) {  return lastGeneratedImage( list[1] );  } );
@@ -56,7 +56,7 @@ public :
 
     drawingGetFuncs.emplace( "randomizeTiles",  [ = ]( QStringList & list ) {  return randomizeTiles( list[1], list[2].toInt(), list[3].toInt() );  } );
 
-    drawingGetFuncs.emplace( "makeHyperbolic",  [ = ]( QStringList & list ) {  return makeHyperbolic( list[1], list[2].toInt(), list[3].toInt() );  } );
+    drawingGetFuncs.emplace( "hyperbolicImage",  [ = ]( QStringList & list ) {  return makeHyperbolic( list[1], list[2].toInt(), list[3].toInt() );  } );
 
     drawingGetFuncs.emplace( "squiggles",  [ = ]( QStringList & list ) {
       return paintSquiggles( list[1], list[2].toInt(), list[3].toInt(), list[4].toInt(), list[5].toDouble(),
@@ -130,7 +130,7 @@ public :
 
   void initDrawingTestFuncs()
   {
-    // example:  http://localhost:9080/test/?quasiPeriodicStripes
+    // example:  http://localhost:60564/test?quasiPeriodicStripes
     drawingTestFuncs.clear();
     drawingTestFuncs.emplace( "ca", []() { return caGenerateImage( "test", 600, 600, 3, 295, 295, 305, 305, 300, 2.5   );  } );
     drawingTestFuncs.emplace( "clouds", []() { return paintClouds( "test",  256, 9, 111, 123, 150, 90, 190, 200, 55, 178, 222, 1 );} );
@@ -139,11 +139,11 @@ public :
     drawingTestFuncs.emplace( "hyperbolicLines", []() { return paintHyperbolicLines( "test",  400, 2, 3, 2, 2, 2, 1, 1, 1.0, 1.50,  11 );} );
     drawingTestFuncs.emplace( "lines", []() { return paintLines( "test", 400, 13, 5, "Line", 2, true, "Curl", 4, true, "Beads", 6, true  );} );
     drawingTestFuncs.emplace( "quasiPeriodicStripes",  []() { return paintQuasiperiodicStripes( "test", 400, 20, 1.5 );} );
-    drawingTestFuncs.emplace( "quasiTrap", []() { return drawQuasiTrap( "test", 800, 800, 8,  66.6 );} );
-    drawingTestFuncs.emplace( "quasiTrapPoly", []() { return drawQuasiTrapPoly( "test", 800, 800, 7,  44.4 );} );
+    drawingTestFuncs.emplace( "quasiTrap", []() { return drawQuasiTrap( "test", 400, 400, 8,  66.6 );} );
+    drawingTestFuncs.emplace( "quasiTrapPoly", []() { return drawQuasiTrapPoly( "test", 200, 200, 7,  44.4 );} );
     drawingTestFuncs.emplace( "squiggles",  []() { return paintSquiggles( "test", 15, 512, 10, 1.3, 1.50, 1.3, 1.5 );} );
     drawingTestFuncs.emplace( "stripes",  []() { return paintStripes( "test", 600, 5, .50 );} );
-    drawingTestFuncs.emplace( "trap", []() { return drawTrap( "test", 144, 2 );} );
+    drawingTestFuncs.emplace( "trap", []() { return drawTrap( "test", 144, 8 );} );
     drawingTestFuncs.emplace( "walk", []() { return drawWalk( "test", 200, 400, true, 0 );} );
     drawingTestFuncs.emplace( "walk2", []() { return drawWalk( "test", 400, 200, false, 1 );} );
   }
@@ -155,7 +155,7 @@ private:
     QByteArray bytes{"Available test API:\n"};
 
     for ( auto item : drawingTestFuncs ) {
-      bytes.append( "\n/test/?" );
+      bytes.append( "\n/test?" );
       bytes.append( item.first.c_str() );
     }
 
