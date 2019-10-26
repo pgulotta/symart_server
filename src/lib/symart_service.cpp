@@ -76,20 +76,20 @@ QByteArray updateSquiggles( const QString& id,  int size, int symGroup )
 }
 
 QByteArray paintClouds( const QString& id, int size, int symmmetryGroup, int col1Red, int col1Green, int col1Blue,
-                        int col2Red, int col2Green, int col2Blue, int col3Red, int col3Green, int col3Blue, int randfuncsIndex )
+                        int col2Red, int col2Green, int col2Blue, int col3Red, int col3Green, int col3Blue, int distributionIndex )
 {
   return requestDispatcher.paintClouds( id,  size, symmmetryGroup, col1Red,  col1Green, col1Blue,
-                                        col2Red,  col2Green,  col2Blue,  col3Red,  col3Green,  col3Blue,  randfuncsIndex );
+                                        col2Red,  col2Green,  col2Blue,  col3Red,  col3Green,  col3Blue,  distributionIndex );
 }
 
 QByteArray paintHyperbolicClouds( const QString& id,  int size, int fdfIndex, int rotation0, int rotation1,
                                   int rotation2, int rotation3, int projType, int col1Red,
                                   int col1Green, int col1Blue, int col2Red, int col2Green, int col2Blue,
-                                  int col3Red, int col3Green, int col3Blue, int randfuncsIndex )
+                                  int col3Red, int col3Green, int col3Blue, int distributionIndex )
 {
   return requestDispatcher.paintHyperbolicClouds( id,  size, fdfIndex, rotation0,  rotation1, rotation2, rotation3,
                                                   projType, col1Red,
-                                                  col1Green, col1Blue, col2Red, col2Green, col2Blue, col3Red, col3Green, col3Blue, randfuncsIndex );
+                                                  col1Green, col1Blue, col2Red, col2Green, col2Blue, col3Red, col3Green, col3Blue, distributionIndex );
 }
 
 QByteArray paintLines( const QString& id, int size, int symmmetryGroup, int ncolors,
@@ -133,8 +133,8 @@ QByteArray drawWalk2( const QString& id,  int width, int height, bool balanced, 
 }
 
 QByteArray paintHyperbolicLines( const QString& id,  int size, int fdfIndex, int rotation0, int rotation1,
-                                 int rotation2,
-                                 int rotation3, int projType, int flipType, float thickness, float sharpness, int ncolors )
+                                 int rotation2, int rotation3, int projType, int flipType, float thickness,
+                                 float sharpness, int ncolors )
 {
   return requestDispatcher.paintHyperbolicLines( id, size,  fdfIndex,  rotation0,  rotation1,  rotation2,
                                                  rotation3,  projType,  flipType,  thickness,  sharpness,  ncolors );

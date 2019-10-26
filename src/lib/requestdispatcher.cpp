@@ -96,21 +96,21 @@ QByteArray RequestDispatcher::updateSquiggles( const QString& id, int size, int 
 
 QByteArray RequestDispatcher::paintClouds( const QString& id, int size, int symmmetryGroup, int col1Red, int col1Green,
                                            int col1Blue, int col2Red,
-                                           int col2Green, int col2Blue, int col3Red, int col3Green, int col3Blue, int randfuncsIndex )
+                                           int col2Green, int col2Blue, int col3Red, int col3Green, int col3Blue, int distributionIndex )
 {
   paint_clouds( getImageData( id ), size, symmmetryGroup, col1Red, col1Green, col1Blue,  col2Red,
-                col2Green, col2Blue, col3Red,  col3Green, col3Blue, randfuncsIndex );
+                col2Green, col2Blue, col3Red,  col3Green, col3Blue, distributionIndex );
   return toByteArray( QImage{makeImage( getImageData( id ).img )} );
 }
 
 QByteArray RequestDispatcher::paintHyperbolicClouds( const QString& id, int size, int fdfIndex, int rotation0,
                                                      int rotation1, int rotation2,
                                                      int rotation3, int projType, int col1Red, int col1Green, int col1Blue, int col2Red, int col2Green, int col2Blue,
-                                                     int col3Red, int col3Green, int col3Blue, int randfuncsIndex )
+                                                     int col3Red, int col3Green, int col3Blue, int distributionIndex )
 {
   paint_hyperbolic_clouds( getImageData( id ),  size,  fdfIndex,  rotation0,  rotation1,  rotation2,
                            rotation3,  projType,  col1Red,  col1Green,  col1Blue,  col2Red,  col2Green, col2Blue,
-                           col3Red,  col3Green,  col3Blue,  randfuncsIndex );
+                           col3Red,  col3Green,  col3Blue,  distributionIndex );
   return toByteArray( QImage{makeImage( getImageData( id ).img )} );
 }
 

@@ -530,9 +530,9 @@ canvas<color_t> quad_ab22( int sz, color_t col1, color_t col2, color_t col3, clo
 
 void paint_clouds( ImageData& imageData,  int size, int symmmetryGroup, int col1Red, int col1Green,
                    int col1Blue, int col2Red, int col2Green, int col2Blue,
-                   int col3Red, int col3Green, int col3Blue, int randfuncsIndex )
+                   int col3Red, int col3Green, int col3Blue, int distributionIndex )
 {
-  const clouds_randfunc randfunc{randfuncs[randfuncsIndex]};
+  const clouds_randfunc randfunc{randfuncs[distributionIndex]};
   symgroup symGroup = static_cast<symgroup>( symmmetryGroup );
   color_t col1{col1Red, col1Green, col1Blue};
   color_t col2{col2Red, col2Green, col2Blue};
@@ -658,7 +658,7 @@ void paint_clouds( ImageData& imageData,  int size, int symmmetryGroup, int col1
 void paint_hyperbolic_clouds( ImageData& imageData, int size, int fdfIndex, int rotation0, int rotation1,
                               int rotation2,
                               int rotation3, int projType, int col1Red, int col1Green, int col1Blue, int col2Red, int col2Green, int col2Blue,
-                              int col3Red, int col3Green, int col3Blue, int randfuncsIndex )
+                              int col3Red, int col3Green, int col3Blue, int distributionIndex )
 {
   projtype pt = static_cast<projtype>( projType );
   color_t col1{col1Red, col1Green, col1Blue};
@@ -669,7 +669,7 @@ void paint_hyperbolic_clouds( ImageData& imageData, int size, int fdfIndex, int 
   extractRotations( rotation0, rotation1, rotation2, rotation3, rotations );
   const fundamental_domain& fd = family.domain( rotations );
 
-  const clouds_randfunc randfunc{randfuncs[randfuncsIndex]};
+  const clouds_randfunc randfunc{randfuncs[distributionIndex]};
   canvas<color_t> tri;
   int trisize = static_cast<int>( size * fd.polygon.sinh_radius() / fd.polygon.cosh_radius()
                                   * 1.73205080756887729352 * ( pt == projtype::POINCARE ? .5 : 1 ) );

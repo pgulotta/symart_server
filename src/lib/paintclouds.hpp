@@ -32,12 +32,12 @@ using clouds_randfunc = double ( * )( double );
 
 void paint_clouds( ImageData& imageData, int size, int symmmetryGroup, int col1Red, int col1Green,
                    int col1Blue, int col2Red, int col2Green, int col2Blue, int col3Red,
-                   int col3Green, int col3Blue, int randfuncsIndex );
+                   int col3Green, int col3Blue, int distributionIndex );
 
 void paint_hyperbolic_clouds( ImageData& imageData, int size, int fdfIndex, int rotation0, int rotation1,
                               int rotation2, int rotation3, int projType, int col1Red, int col1Green,
                               int col1Blue, int col2Red, int col2Green, int col2Blue,
-                              int col3Red, int col3Green, int col3Blue, int randfuncsIndex );
+                              int col3Red, int col3Green, int col3Blue, int distributionIndex );
 
 
 
