@@ -148,7 +148,6 @@ public :
     drawingTestFuncs.emplace( "walk2", []() { return drawWalk( "test", 400, 200, false, 1 );} );
   }
 
-
 private:
   void handleReady( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
   {

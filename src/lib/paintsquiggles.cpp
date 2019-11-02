@@ -94,70 +94,70 @@ void fill( symmetric_canvas<uint8_t>* grid1, symmetric_canvas<uint8_t>* grid2,
 
 void  update_squiggles( ImageData& imageData, int size, int symGroup )
 {
-  symgroup sg{static_cast<symgroup>( symGroup )};
-  symmetric_canvas<color_t> canvas( size, sg );
+    symgroup sg{static_cast<symgroup>( symGroup )};
+    symmetric_canvas<color_t> canvas( size, sg );
 
-  for ( size_t i = 0; i < imageData.layers->size(); i++ ) {
-    ( *imageData.layers )[i].color = randomColor();
-  }
+    for ( size_t i = 0; i < imageData.layers->size(); i++ ) {
+        ( *imageData.layers )[i].color = randomColor();
+    }
 
-  merge( canvas.unsafe_get_canvas(), *imageData.layers );
+    merge( canvas.unsafe_get_canvas(), *imageData.layers );
 }
 
 void paint_squiggles( ImageData& imageData, int ncolors, int size, int symGroup, double alpha,
-                      double exponent, double thickness, double sharpness )
+                     double exponent, double thickness, double sharpness )
 {
-  paint_squiggles( imageData, "",  0.0, 0, 0, 0,  ncolors, size, symGroup, alpha, exponent, thickness, sharpness );
+    paint_squiggles( imageData, "",  0.0, 0, 0, 0,  ncolors, size, symGroup, alpha, exponent, thickness, sharpness );
 
 }
 void  paint_squiggles( ImageData& imageData, const QString& colorImagePath,  double saturationBoost, bool useHue,
-                       bool useSaturation, bool useLightness, int ncolors, int size, int symGroup, double alpha,
-                       double exponent, double thickness, double sharpness )
+                     bool useSaturation, bool useLightness, int ncolors, int size, int symGroup, double alpha,
+                     double exponent, double thickness, double sharpness )
 {
-  QImage colorImage;
+    QImage colorImage;
 
-  if ( !colorImagePath.isEmpty() ) {
-    colorImage.load( colorImagePath );
-  }
+    if ( !colorImagePath.isEmpty() ) {
+        colorImage.load( colorImagePath );
+    }
 
-  vector<symmetric_canvas<uint8_t>> grids( ncolors  );
-  symgroup sg{static_cast<symgroup>( symGroup )};
-  vector<stripes_grid> stripes_grids;
+    vector<symmetric_canvas<uint8_t>> grids( ncolors  );
+    symgroup sg{static_cast<symgroup>( symGroup )};
+    vector<stripes_grid> stripes_grids;
 
-  for ( size_t i = 0; i < ncolors; i += 2 ) {
-    stripes_grids.emplace_back( size, sg );
-  }
+    for ( size_t i = 0; i < ncolors; i += 2 ) {
+        stripes_grids.emplace_back( size, sg );
+    }
 
-  # pragma omp parallel for
+# pragma omp parallel for
 
-  for ( size_t i = 0; i < stripes_grids.size(); i++ ) {
-    symmetric_canvas<uint8_t>* grid1 = &( grids[2 * i] ), *grid2;
-    ( *grid1 ) = symmetric_canvas<uint8_t>( size, sg );
+    for ( size_t i = 0; i < stripes_grids.size(); i++ ) {
+        symmetric_canvas<uint8_t>* grid1 = &( grids[2 * i] ), *grid2;
+        ( *grid1 ) = symmetric_canvas<uint8_t>( size, sg );
 
-    if ( 2 * i + 1 < ncolors ) {
-      grid2 = &( grids[2 * i + 1] );
-      ( *grid2 ) = symmetric_canvas<uint8_t>( size, sg );
-    } else { grid2 = nullptr; }
+        if ( 2 * i + 1 < ncolors ) {
+            grid2 = &( grids[2 * i + 1] );
+            ( *grid2 ) = symmetric_canvas<uint8_t>( size, sg );
+        } else { grid2 = nullptr; }
 
-    fill( grid1, grid2, alpha, exponent, thickness, sharpness, stripes_grids[i] );
-  }
+        fill( grid1, grid2, alpha, exponent, thickness, sharpness, stripes_grids[i] );
+    }
 
-  imageData.layers = std::make_shared<vector<layer>>( grids.size() );
+    imageData.layers = std::make_shared<vector<layer>>( grids.size() );
 
-  for ( size_t i = 0; i < grids.size(); i++ ) {
-    auto p_grid = std::make_shared<symmetric_canvas<uint8_t>>( std::move( grids[i] ) );
-    ( *imageData.layers )[i].pixels = std::shared_ptr<const canvas<uint8_t>>( p_grid, &( p_grid->as_canvas() ) );
-    ( *imageData.layers )[i].pastel = false;
-  }
+    for ( size_t i = 0; i < grids.size(); i++ ) {
+        auto p_grid = std::make_shared<symmetric_canvas<uint8_t>>( std::move( grids[i] ) );
+        ( *imageData.layers )[i].pixels = std::shared_ptr<const canvas<uint8_t>>( p_grid, &( p_grid->as_canvas() ) );
+        ( *imageData.layers )[i].pastel = false;
+    }
 
-  symmetric_canvas<color_t> canvas( size, sg );
+    symmetric_canvas<color_t> canvas( size, sg );
 
-  for ( size_t i = 0; i < imageData.layers->size(); i++ ) {
-    ( *imageData.layers )[i].color = generateColor( colorImage, useHue, useSaturation, useLightness, saturationBoost );
-  }
+    for ( size_t i = 0; i < imageData.layers->size(); i++ ) {
+        ( *imageData.layers )[i].color = generateColor( colorImage, useHue, useSaturation, useLightness, saturationBoost );
+    }
 
-  merge( canvas.unsafe_get_canvas(), *imageData.layers );
-  imageData.img =  std::make_shared<symmetric_canvas<color_t>>( canvas );
+    merge( canvas.unsafe_get_canvas(), *imageData.layers );
+    imageData.img =  std::make_shared<symmetric_canvas<color_t>>( canvas );
 
 }
 
