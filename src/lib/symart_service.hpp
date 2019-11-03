@@ -17,10 +17,6 @@ bool canTileImage( const QString& id );
 
 bool isSymmetricView( const QString& id );
 
-QByteArray toByteArray( const QImage& image );
-
-QImage fromByteArray( const QByteArray& ba );
-
 QByteArray lastGeneratedImage( const QString& id );
 
 QByteArray hexagonalStretch( const QString& id );
@@ -29,14 +25,14 @@ QByteArray randomizeTiles( const QString& id, int xtiles, int ytiles );
 
 QByteArray makeHyperbolic( const QString& id, int size,  int projType );
 
-QByteArray loadImage( const QString& id,  const QByteArray& byteArray, int symGroup );
+void loadColorsImage( const QByteArray& byteArray );
 
 QByteArray  updateSquiggles( const QString& id, int size, int symGroup );
 
 QByteArray  paintSquiggles( const QString& id,  int ncolors, int size, int symGroup, double alpha, double exponent,
                             double thickness, double sharpness );
 
-QByteArray  paintSquiggles( const QString& id,  const QString& colorImagePath,  double saturationBoost, bool useHue,
+QByteArray  paintSquiggles( const QString& id, double saturationBoost, bool useHue,
                             bool useSaturation, bool useLightness, int ncolors, int size, int symGroup, double alpha, double exponent,
                             double thickness, double sharpness );
 

@@ -60,9 +60,9 @@ void draw_walk2( ImageData& imageData, int width, int height, bool balanced, int
 
 void paint_quasiperiodic_stripes( ImageData& imageData, int size, int fftsize, double alpha );
 
-void  paint_squiggles( ImageData& imageData, const QString& colorImagePath,  double saturationBoost, bool useHue,
+void  paint_squiggles( ImageData& imageData, double saturationBoost, bool useHue,
                        bool useSaturation, bool useLightness, int ncolors, int size, int symGroup,
-                       double alpha, double exponent, double thickness, double sharpness );
+                       double alpha, double exponent, double thickness, double sharpness, const QImage& colorImage );
 
 void paint_squiggles( ImageData& imageData, int ncolors, int size, int symGroup, double alpha,
                       double exponent, double thickness, double sharpness );

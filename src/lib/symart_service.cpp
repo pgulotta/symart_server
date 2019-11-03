@@ -11,16 +11,6 @@ bool toBool( const QString& text ) {return text == "false" ? false : true;  }
 
 QString fromBool( bool text ) {return text == false ? "false" : "true";  }
 
-QByteArray toByteArray( const QImage& image )
-{
-  return requestDispatcher.toByteArray( image ) ;
-}
-
-QImage fromByteArray( const QByteArray& ba  )
-{
-  return  requestDispatcher.fromByteArray( ba );
-}
-
 QByteArray lastGeneratedImage( const QString& id )
 {
   return requestDispatcher.lastGeneratedImage( id );
@@ -41,9 +31,9 @@ QByteArray makeHyperbolic( const QString& id,  int size,  int projType )
   return requestDispatcher.makeHyperbolic( id, size, projType );
 }
 
-QByteArray loadImage( const QString& id,  const QByteArray& byteArray, int symGroup )
+void loadColorsImage( const QByteArray& byteArray )
 {
-  return requestDispatcher.loadImage( id, byteArray, symGroup );
+  requestDispatcher.loadColorsImage( byteArray );
 }
 
 bool canTileImage( const QString& id )
@@ -62,11 +52,11 @@ QByteArray paintSquiggles( const QString& id,  int ncolors, int size, int symGro
   return  requestDispatcher.paintSquiggles( id,  ncolors, size, symGroup, alpha, exponent, thickness,  sharpness );
 }
 
-QByteArray paintSquiggles( const QString& id,  const QString& colorImagePath,  double saturationBoost, bool useHue,
+QByteArray paintSquiggles( const QString& id, double saturationBoost, bool useHue,
                            bool useSaturation, bool useLightness, int ncolors, int size, int symGroup, double alpha, double exponent,
                            double thickness, double sharpness )
 {
-  return  requestDispatcher.paintSquiggles( id, colorImagePath, saturationBoost, useHue, useSaturation, useLightness,
+  return  requestDispatcher.paintSquiggles( id, saturationBoost, useHue, useSaturation, useLightness,
                                             ncolors, size, symGroup, alpha, exponent, thickness,  sharpness );
 }
 

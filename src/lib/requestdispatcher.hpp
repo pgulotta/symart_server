@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "imagedata.hpp"
 #include <map>
@@ -14,9 +14,6 @@ struct ImageMetaData;
 class RequestDispatcher
 {
 public:
-  QByteArray toByteArray( const QImage& image );
-
-  QImage fromByteArray( const QByteArray& ba );
 
   bool canTileImage( const QString& id );
 
@@ -30,21 +27,21 @@ public:
 
   QByteArray makeHyperbolic( const QString& id, int size,  int projType );
 
-  QByteArray loadImage( const QString& id, const QByteArray& byteArray, int symGroup );
+  void loadColorsImage( const QByteArray& byteArray );
+
+  const QImage& getColorsImage() {return mColorsImage; }
 
   QByteArray  updateSquiggles( const QString& id, int size, int symGroup );
 
   QByteArray  paintSquiggles( const QString& id, int ncolors, int size, int symGroup, double alpha, double exponent,
                               double thickness, double sharpness );
 
-  QByteArray  paintSquiggles( const QString& id, const QString& colorImagePath,  double saturationBoost, bool useHue,
-                              bool useSaturation,
-                              bool useLightness, int ncolors, int size, int symGroup, double alpha, double exponent,
+  QByteArray  paintSquiggles( const QString& id, double saturationBoost, bool useHue,
+                              bool useSaturation, bool useLightness, int ncolors, int size, int symGroup, double alpha, double exponent,
                               double thickness, double sharpness );
 
   QByteArray paintClouds( const QString& id, int size, int symmmetryGroup, int col1Red, int col1Green, int col1Blue,
-                          int col2Red,
-                          int col2Green, int col2Blue, int col3Red, int col3Green, int col3Blue, int distributionIndex );
+                          int col2Red, int col2Green, int col2Blue, int col3Red, int col3Green, int col3Blue, int distributionIndex );
 
 
   QByteArray paintHyperbolicClouds( const QString& id, int size, int fdfIndex, int rotation0, int rotation1,
@@ -97,6 +94,7 @@ private:
   void setImageData( const QString& id, ImageData& imageData );
 
   std::map<QString, ImageMetaData> mImageDataById;
+  QImage mColorsImage;
 
 
 };

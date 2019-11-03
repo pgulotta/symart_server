@@ -1,5 +1,6 @@
-﻿#include "requesthandler.hpp"
+#include "requesthandler.hpp"
 #include "symart_service.hpp"
+#include <QDebug>
 #include <QImage>
 #include <QStringList>
 #include <thread>
@@ -9,10 +10,11 @@
 #include <pistache/router.h>
 #include <pistache/endpoint.h>
 
-typedef std::function<QByteArray( void )> drawingTestFunc;
+
 typedef std::function<QByteArray( QStringList& )> drawingGenerateFunc;
 typedef std::function<QByteArray( QString& )> predicateFunc;
-
+typedef std::function<QByteArray( void )> loadFunc;
+typedef std::function<QByteArray( void )> drawingTestFunc;
 
 class SymArtEndpoint
 {
@@ -41,8 +43,8 @@ public :
   {
     //  example:  http://localhost:60564/ask?canTileImage/id123
     predicateFuncs.clear();
-    predicateFuncs.emplace( "canTileImage",  [ = ]( QString & item ) {  return fromBool( canTileImage( item ) ).toLatin1();} );
-    predicateFuncs.emplace( "isSymmetricView",  [ = ]( QString & item ) {  return fromBool( isSymmetricView( item ) ).toLatin1();} );
+    predicateFuncs.emplace( "canTileImage",  [ = ]( QString & id ) {  return fromBool( canTileImage( id ) ).toLatin1();} );
+    predicateFuncs.emplace( "isSymmetricView",  [ = ]( QString & id ) {  return fromBool( isSymmetricView( id ) ).toLatin1();} );
   }
 
   void initDrawingGetFuncs()
@@ -63,9 +65,9 @@ public :
                              list[6].toDouble(), list[7].toDouble(), list[8].toDouble() );
     } );
     drawingGetFuncs.emplace( "squigglesImageColors",  [ = ]( QStringList & list ) {
-      return paintSquiggles( list[1], list[2], list[3].toDouble(), toBool( list[4] ), toBool( list[5] ),
-                             toBool( list[6] ),  list[7].toInt(), list[8].toInt(), list[9].toInt(), list[10].toDouble(),
-                             list[11].toDouble(), list[12].toDouble(), list[13].toDouble() );
+      return paintSquiggles( list[1], list[2].toDouble(), toBool( list[3] ), toBool( list[4] ),
+                             toBool( list[5] ),  list[6].toInt(), list[7].toInt(), list[8].toInt(), list[9].toDouble(),
+                             list[10].toDouble(), list[11].toDouble(), list[12].toDouble() );
     } );
 
     drawingGetFuncs.emplace( "clouds",  [ = ]( QStringList & list ) {
@@ -149,7 +151,7 @@ public :
   }
 
 private:
-  void handleReady( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
+  void readyHandler( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
   {
     QByteArray bytes{"Available test API:\n"};
 
@@ -166,7 +168,7 @@ private:
     response.send( Pistache::Http::Code::Ok,  request.query().as_str() );
   }
 
-  void handleTest( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
+  void testHandler( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
   {
     bool success = false;
 
@@ -192,7 +194,34 @@ private:
     }
   }
 
-  void handleAsk( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
+  void imageColorsHandler( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
+  {
+    qDebug() << Q_FUNC_INFO << "&&&&&&&&&&&&&&&&&&&&&&&&";
+    std::cout << Q_FUNC_INFO << "&&&&&&&&&&&&&&&&&&&&&&&&";
+    bool success = false;
+
+    try {
+
+      if ( request.method() == Pistache::Http::Method::Get ) {
+        auto query{request.query().parameters()[0]};
+
+        if ( query.length() > 0 ) {
+          QString param = query.c_str();
+          loadColorsImage( param.toUtf8() );
+          success = true;
+        }
+      }
+    } catch ( const std::exception ) { }
+
+
+    if ( !success ) {
+      response.send( Pistache::Http::Code::Bad_Request, request.query().as_str() +
+                     " is not a valid  request. To test the API, enter the request: /ready" );
+
+    }
+  }
+
+  void askHandler( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
   {
     bool success = false;
 
@@ -226,7 +255,7 @@ private:
     }
   }
 
-  void handleGet( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
+  void getHandler( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
   {
     bool success = false;
 
@@ -263,10 +292,11 @@ private:
   void setupRoutes()
   {
     using namespace Pistache::Rest;
-    Routes::Get( router, "/ready", Routes::bind( &SymArtEndpoint::handleReady, this ) );
-    Routes::Get( router, "/ask",  Routes::bind( &SymArtEndpoint::handleAsk,  this ) );
-    Routes::Get( router, "/get",  Routes::bind( &SymArtEndpoint::handleGet,  this ) );
-    Routes::Get( router, "/test",  Routes::bind( &SymArtEndpoint::handleTest,  this ) );
+    Routes::Get( router, "/ready", Routes::bind( &SymArtEndpoint::readyHandler, this ) );
+    Routes::Get( router, "/ask",  Routes::bind( &SymArtEndpoint::askHandler,  this ) );
+    Routes::Get( router, "/get",  Routes::bind( &SymArtEndpoint::getHandler,  this ) );
+    Routes::Get( router, "/imageColors", Routes::bind( &SymArtEndpoint::imageColorsHandler,  this ) );
+    Routes::Get( router, "/test",  Routes::bind( &SymArtEndpoint::testHandler,  this ) );
   }
 
 

@@ -22,6 +22,7 @@
 #include "color.hpp"
 #include <QBuffer>
 
+
 QImage makeImage( const CanvasView<color_t>& v )
 {
   const auto& src = *( v.canvas_view );
@@ -44,5 +45,22 @@ QImage makeImage( const CanvasView<color_t>& v )
   return image;
 }
 
+QByteArray toByteArray( const QImage& image )
+{
+  QByteArray ba  ;
 
+  if ( image.sizeInBytes() > 0 ) {
+    QBuffer buffer( &ba );
+    buffer.open( QIODevice::WriteOnly );
+    image.save( &buffer, "PNG" );
+  }
 
+  return ba ;
+}
+
+QImage fromByteArray( const QByteArray& ba  )
+{
+  QImage image;
+  image.loadFromData( ba, "PNG" );
+  return image;
+}

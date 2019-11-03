@@ -9,28 +9,8 @@
 #include "symmetric_canvas.hpp"
 #include <QImage>
 #include <QBuffer>
+#include <QDebug>
 
-
-
-QByteArray RequestDispatcher::toByteArray( const QImage& image )
-{
-  QByteArray ba  ;
-
-  if ( image.sizeInBytes() > 0 ) {
-    QBuffer buffer( &ba );
-    buffer.open( QIODevice::WriteOnly );
-    image.save( &buffer, "PNG" );
-  }
-
-  return ba ;
-}
-
-QImage RequestDispatcher::fromByteArray( const QByteArray& ba  )
-{
-  QImage image;
-  image.loadFromData( ba, "PNG" );
-  return image;
-}
 
 QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )
 {
@@ -58,10 +38,11 @@ QByteArray RequestDispatcher::makeHyperbolic( const QString& id, int size,  int 
   return toByteArray( QImage{makeImage( newImageData.img )} );
 }
 
-QByteArray RequestDispatcher::loadImage( const QString& id, const QByteArray& byteArray, int symGroup )
+void RequestDispatcher::loadColorsImage( const QByteArray& byteArray )
 {
-  load_image( fromByteArray( byteArray ),  symGroup, getImageData( id ) );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  qDebug() << Q_FUNC_INFO << "byteArray.size()  =  " << byteArray.size();
+  mColorsImage = fromByteArray( byteArray ) ;
+  qDebug() << Q_FUNC_INFO << " mColorsImage.isNull()=" << mColorsImage.isNull();
 }
 
 bool RequestDispatcher::canTileImage( const QString& id ) {return  getImageData( id ).img.wrap_view  != nullptr; }
@@ -77,14 +58,13 @@ QByteArray RequestDispatcher::paintSquiggles( const QString& id, int ncolors, in
   return toByteArray( QImage{makeImage( getImageData( id ).img )} );
 }
 
-QByteArray RequestDispatcher::paintSquiggles( const QString& id, const QString& colorImagePath,
+QByteArray RequestDispatcher::paintSquiggles( const QString& id,
                                               double saturationBoost, bool useHue, bool useSaturation,
                                               bool useLightness, int ncolors, int size, int symGroup, double alpha, double exponent,
                                               double thickness, double sharpness )
 {
-  paint_squiggles( getImageData( id ), colorImagePath, saturationBoost, useHue, useSaturation, useLightness, ncolors,
-                   size,
-                   symGroup,  alpha,  exponent,  thickness,  sharpness );
+  paint_squiggles( getImageData( id ), saturationBoost, useHue, useSaturation, useLightness, ncolors,
+                   size, symGroup,  alpha,  exponent,  thickness,  sharpness, getColorsImage() );
   return toByteArray( QImage{makeImage( getImageData( id ).img )} );
 }
 

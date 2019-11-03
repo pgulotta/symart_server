@@ -35,6 +35,9 @@ struct layer;
 
 QImage makeImage( const CanvasView<color_t>& v );
 
+QByteArray toByteArray( const QImage& image ) ;
+
+QImage fromByteArray( const QByteArray& ba );
 
 struct ImageData {
   ImageData() : layers( nullptr ), original( true ) {}
