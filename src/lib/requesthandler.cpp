@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QImage>
 #include <QStringList>
+#include <QTextCodec>
 #include <thread>
 #include <iostream>
 #include <limits>
@@ -196,29 +197,25 @@ private:
 
   void imageColorsHandler( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
   {
-    qDebug() << Q_FUNC_INFO << "&&&&&&&&&&&&&&&&&&&&&&&&";
-    std::cout << Q_FUNC_INFO << "&&&&&&&&&&&&&&&&&&&&&&&&";
-    bool success = false;
+    Q_UNUSED ( request )
+    Q_UNUSED ( response )
+    qDebug() << Q_FUNC_INFO << "Use of an image palette is not yet supported.";
 
-    try {
+//    bool success{false};
 
-      if ( request.method() == Pistache::Http::Method::Get ) {
-        auto query{request.query().parameters()[0]};
+//    try {
+//      auto payload =  request.query().parameters()[3];
 
-        if ( query.length() > 0 ) {
-          QString param = query.c_str();
-          loadColorsImage( param.toUtf8() );
-          success = true;
-        }
-      }
-    } catch ( const std::exception ) { }
+//      loadColorsImage( QTextCodec::codecForMib( 2259 )->fromUnicode( payload.c_str() ) );
+//      success = true;
+//    } catch ( const std::exception ) { }
 
 
-    if ( !success ) {
-      response.send( Pistache::Http::Code::Bad_Request, request.query().as_str() +
-                     " is not a valid  request. To test the API, enter the request: /ready" );
+//    if ( !success ) {
+//      response.send( Pistache::Http::Code::Bad_Request, request.query().as_str() +
+//                     " is not a valid  request. To test the API, enter the request: /ready" );
 
-    }
+//    }
   }
 
   void askHandler( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
@@ -292,11 +289,12 @@ private:
   void setupRoutes()
   {
     using namespace Pistache::Rest;
-    Routes::Get( router, "/ready", Routes::bind( &SymArtEndpoint::readyHandler, this ) );
-    Routes::Get( router, "/ask",  Routes::bind( &SymArtEndpoint::askHandler,  this ) );
-    Routes::Get( router, "/get",  Routes::bind( &SymArtEndpoint::getHandler,  this ) );
+
+    Routes::Get( router,  "/ready", Routes::bind( &SymArtEndpoint::readyHandler, this ) );
+    Routes::Get( router,  "/ask", Routes::bind( &SymArtEndpoint::askHandler,  this ) );
+    Routes::Get( router,  "/get", Routes::bind( &SymArtEndpoint::getHandler,  this ) );
+    Routes::Get( router,  "/test", Routes::bind( &SymArtEndpoint::testHandler,  this ) );
     Routes::Get( router, "/imageColors", Routes::bind( &SymArtEndpoint::imageColorsHandler,  this ) );
-    Routes::Get( router, "/test",  Routes::bind( &SymArtEndpoint::testHandler,  this ) );
   }
 
 
