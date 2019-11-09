@@ -70,8 +70,9 @@ QByteArray RequestDispatcher::paintSquiggles( const QString& id,
 
 QByteArray RequestDispatcher::updateSquiggles( const QString& id, int size, int symGroup )
 {
-  update_squiggles( getImageData( id ), size,  symGroup );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  ImageData& data{getImageData( id )};
+  update_squiggles( data, size,  symGroup );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::paintClouds( const QString& id, int size, int symmmetryGroup, int col1Red, int col1Green,

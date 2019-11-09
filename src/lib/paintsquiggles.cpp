@@ -102,6 +102,7 @@ void  update_squiggles( ImageData& imageData, int size, int symGroup )
   }
 
   merge( canvas.unsafe_get_canvas(), *imageData.layers );
+  imageData.img =  std::make_shared<symmetric_canvas<color_t>>( canvas );
 }
 
 void paint_squiggles( ImageData& imageData, int ncolors, int size, int symGroup, double alpha,
