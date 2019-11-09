@@ -26,9 +26,9 @@ QByteArray RequestDispatcher::hexagonalStretch( const QString& id )
 
 QByteArray RequestDispatcher::randomizeTiles( const QString& id, int xtiles, int ytiles )
 {
-  auto img = randomize( xtiles, ytiles, *( getImageData( id ).img.sym_view ) );
-  auto newImageData  = ImageData( std::move( img ), nullptr, false );
-  return toByteArray( QImage{makeImage( newImageData.img )} );
+  wrap_canvas<color_t> img = randomize( xtiles, ytiles, *( getImageData( id ).img.sym_view ) );
+  const auto canvasView = std::make_shared<wrap_canvas<color_t>>( img );
+  return toByteArray( makeImage( canvasView ) );
 }
 
 QByteArray RequestDispatcher::makeHyperbolic( const QString& id, int size,  int projType )
