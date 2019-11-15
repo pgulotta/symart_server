@@ -1,5 +1,5 @@
 ﻿#include "symart_common.hpp"
-#include "lib/hyperbolic_group.hpp"
+#include "hyperbolic_group.hpp"
 
 
 HyperbolicHelper::HyperbolicHelper( int fundamentalDomainFamilyIndex ):
