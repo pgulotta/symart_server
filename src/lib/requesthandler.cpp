@@ -311,11 +311,10 @@ private:
 RequestHandler::RequestHandler( int  port )
 {
   unsigned int nthreads = std::thread::hardware_concurrency();
-  std::cout << "Using " << nthreads << " threads" << std::endl;
-  std::cout << "Listening on port " << port   << std::endl;
-
-
   Pistache::Address addr( Pistache::Ipv4::any(), static_cast<uint16_t>( port )  );
+  std::cout << "Using " << nthreads << " threads" << std::endl;
+  std::cout << "Connection IP is " << addr.host() << " and port is " << port   << std::endl;
+
   SymArtEndpoint endpoint( addr );
   endpoint.init( nthreads );
   endpoint.start();
