@@ -46,7 +46,7 @@ QByteArray paintHyperbolicClouds( const QString& id, int size, int fdfIndex, int
 
 QByteArray paintLines( const QString& id, int size, int symmmetryGroup, int ncolors,
                        const QString& ruleName1, int weight1, bool isPastel1,
-                       const QString& ruleTName, int weight2, bool isPastel2,
+                       const QString& ruleName2, int weight2, bool isPastel2,
                        const QString& ruleName3, int weight3, bool isPastel3 );
 
 
@@ -54,7 +54,7 @@ QByteArray paintLines( const QString& id, const QString& colorImagePath,  double
                        bool useHue, bool useSaturation, bool useLightness,
                        int size, int symmmetryGroup, int ncolors,
                        const QString& ruleName1, int weight1, bool isPastel1,
-                       const QString& ruleTName, int weight2, bool isPastel2,
+                       const QString& ruleName2, int weight2, bool isPastel2,
                        const QString& ruleName3, int weight3, bool isPastel3 );
 
 QByteArray paintStripes( const QString& id,  int sz, int symGroup, double alpha );

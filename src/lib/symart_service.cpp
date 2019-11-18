@@ -84,21 +84,21 @@ QByteArray paintHyperbolicClouds( const QString& id,  int size, int fdfIndex, in
 
 QByteArray paintLines( const QString& id, int size, int symmmetryGroup, int ncolors,
                        const QString& ruleName1, int weight1, bool isPastel1,
-                       const QString& ruleTName, int weight2, bool isPastel2,
+                       const QString& ruleName2, int weight2, bool isPastel2,
                        const QString& ruleName3, int weight3, bool isPastel3 )
 {
-  return requestDispatcher.paintLines( id, size, symmmetryGroup, ncolors, ruleName1,  weight1, isPastel1, ruleTName,
+  return requestDispatcher.paintLines( id, size, symmmetryGroup, ncolors, ruleName1,  weight1, isPastel1, ruleName2,
                                        weight2,  isPastel2, ruleName3,  weight3,  isPastel3 );
 }
 
 
 QByteArray paintLines( const QString& id,  const QString& colorImagePath,  double saturationBoost,
                        bool useHue, bool useSaturation, bool useLightness, int size, int symmmetryGroup, int ncolors,
-                       const QString& ruleName1, int weight1, bool isPastel1, const QString& ruleTName,
+                       const QString& ruleName1, int weight1, bool isPastel1, const QString& ruleName2,
                        int weight2, bool isPastel2, const QString& ruleName3, int weight3, bool isPastel3 )
 {
   return requestDispatcher.paintLines( id,  colorImagePath, saturationBoost, useHue,  useSaturation,  useLightness,
-                                       size, symmmetryGroup,  ncolors, ruleName1, weight1, isPastel1,  ruleTName, weight2, isPastel2,
+                                       size, symmmetryGroup,  ncolors, ruleName1, weight1, isPastel1,  ruleName2, weight2, isPastel2,
                                        ruleName3, weight3, isPastel3 );
 }
 
