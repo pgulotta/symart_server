@@ -27,9 +27,9 @@ public:
 
   QByteArray makeHyperbolic( const QString& id, int size,  int projType );
 
-  void loadColorsImage( const QByteArray& byteArray );
+  void loadColorsImage( const QString& id, const QByteArray& byteArray );
 
-  const QImage& getColorsImage() {return mColorsImage; }
+  const QImage& getColorsImage( const QString& id ) {return mImagesById[id]; }
 
   QByteArray  updateSquiggles( const QString& id, int size, int symGroup );
 
@@ -94,8 +94,7 @@ private:
   void setImageData( const QString& id, ImageData& imageData );
 
   std::map<QString, ImageMetaData> mImageDataById;
-  QImage mColorsImage;
-
+  std::map<QString, QImage> mImagesById;
 
 };
 

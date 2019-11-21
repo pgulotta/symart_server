@@ -7,9 +7,31 @@
 
 static RequestDispatcher requestDispatcher;
 
-bool toBool( const QString& text ) {return text == "false" ? false : true;  }
+bool toBool( const QString& text )
+{
+  if ( text == "false" ) {
+    return false;
+  }
 
-QString fromBool( bool text ) {return text == false ? "false" : "true";  }
+  if ( text == "0" ) {
+    return false;
+  }
+
+  return true;
+}
+
+QString fromBool( bool value )
+{
+  if ( value == false ) {
+    return "false";
+  }
+
+  if ( value == 0 ) {
+    return "false";
+  }
+
+  return "true";
+}
 
 QByteArray lastGeneratedImage( const QString& id )
 {
@@ -31,9 +53,9 @@ QByteArray makeHyperbolic( const QString& id,  int size,  int projType )
   return requestDispatcher.makeHyperbolic( id, size, projType );
 }
 
-void loadColorsImage( const QByteArray& byteArray )
+void loadColorsImage( const QString& id, const QByteArray& byteArray )
 {
-  requestDispatcher.loadColorsImage( byteArray );
+  requestDispatcher.loadColorsImage( id, byteArray );
 }
 
 bool canTileImage( const QString& id )

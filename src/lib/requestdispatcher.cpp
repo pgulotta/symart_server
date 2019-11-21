@@ -38,11 +38,11 @@ QByteArray RequestDispatcher::makeHyperbolic( const QString& id, int size,  int 
   return toByteArray( QImage{makeImage( newImageData.img )} );
 }
 
-void RequestDispatcher::loadColorsImage( const QByteArray& byteArray )
+void RequestDispatcher::loadColorsImage( const QString& id, const QByteArray& byteArray )
 {
   qDebug() << Q_FUNC_INFO << "byteArray.size()  =  " << byteArray.size();
-  mColorsImage = fromByteArray( byteArray ) ;
-  qDebug() << Q_FUNC_INFO << " mColorsImage.isNull()=" << mColorsImage.isNull();
+  mImagesById[id] = fromByteArray( byteArray ) ;
+  qDebug() << Q_FUNC_INFO << " mColorsImage.isNull()=" << mImagesById[id].isNull();
 }
 
 bool RequestDispatcher::canTileImage( const QString& id ) {return  getImageData( id ).img.wrap_view  != nullptr; }
@@ -64,7 +64,7 @@ QByteArray RequestDispatcher::paintSquiggles( const QString& id,
                                               double thickness, double sharpness )
 {
   paint_squiggles( getImageData( id ), saturationBoost, useHue, useSaturation, useLightness, ncolors,
-                   size, symGroup,  alpha,  exponent,  thickness,  sharpness, getColorsImage() );
+                   size, symGroup,  alpha,  exponent,  thickness,  sharpness, getColorsImage( id ) );
   return toByteArray( QImage{makeImage( getImageData( id ).img )} );
 }
 
