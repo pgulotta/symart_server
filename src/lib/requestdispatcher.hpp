@@ -2,18 +2,25 @@
 
 #include "imagedata.hpp"
 #include <map>
-#include <chrono>
-
+#include <QDateTime>
+#include <QTimer>
 
 class QByteArray;
 class QImage;
 class QString;
 class ImageData;
 struct ImageMetaData;
+struct ColorsImage;
 
-class RequestDispatcher
+class RequestDispatcher final : public QObject
 {
+  Q_OBJECT
+signals:
+private slots:
+  void onPurgeImagesTimer();
+
 public:
+  explicit RequestDispatcher( QObject* parent = nullptr );
 
   bool canTileImage( const QString& id );
 
@@ -29,7 +36,7 @@ public:
 
   void loadColorsImage( const QString& id, const QByteArray& byteArray );
 
-  const QImage& getColorsImage( const QString& id ) {return mImagesById[id]; }
+  QImage getColorsImage( const QString& id ) ;
 
   QByteArray  updateSquiggles( const QString& id, int size, int symGroup );
 
@@ -93,12 +100,20 @@ private:
   ImageData& getImageData( const QString& id );
   void setImageData( const QString& id, ImageData& imageData );
 
+
   std::map<QString, ImageMetaData> mImageDataById;
-  std::map<QString, QImage> mImagesById;
+  std::map<QString, ColorsImage> mColorsImagesById;
+  std::unique_ptr<QTimer> purgeImagesTimer { new QTimer};
 
 };
 
 struct ImageMetaData {
   ImageData imageData;
-  std::chrono::system_clock::time_point lastTouched;
+  QDateTime lastTouched;
 };
+
+struct ColorsImage {
+  QImage image;
+  QDateTime lastTouched;
+};
+

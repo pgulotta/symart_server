@@ -10,7 +10,34 @@
 #include <QImage>
 #include <QBuffer>
 #include <QDebug>
+#include <algorithm>
+#include <unordered_map>
 
+
+const qint64  PurgeImagesTimerIntervalMs {1800000};  // 30 Minutes =1,800,000 Milliseconds
+
+
+void RequestDispatcher::onPurgeImagesTimer()
+{
+  purgeImagesTimer->stop();
+  auto now = QDateTime::currentDateTime();
+
+
+//  auto startOldImageData = std::remove_if( std::begin( mImageDataById ), std::end( mImageDataById ),
+//  [ = ](  auto  item ) {return item.second.lastTouched.addMSecs( PurgeImagesTimerIntervalMs ) > now; } );
+// mImageDataById.erase( startOldImageData, std::end( mImageDataById ) );
+
+//  auto startOldColorImages = std::remove_if( std::begin( mColorsImagesById ), std::end( mColorsImagesById ),
+//  [ = ]( const auto & item ) {return item.second.lastTouched.addMSecs( PurgeImagesTimerIntervalMs ) > now; } );
+// mColorsImagesById.erase( startOldColorImages, std::end( mColorsImagesById ) );
+
+  purgeImagesTimer->start( PurgeImagesTimerIntervalMs );
+}
+
+RequestDispatcher::RequestDispatcher( QObject* parent ):   QObject{parent}
+{
+  connect( purgeImagesTimer.get(), &QTimer::timeout, this, &RequestDispatcher::onPurgeImagesTimer );
+}
 
 QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )
 {
@@ -41,8 +68,16 @@ QByteArray RequestDispatcher::makeHyperbolic( const QString& id, int size,  int 
 void RequestDispatcher::loadColorsImage( const QString& id, const QByteArray& byteArray )
 {
   qDebug() << Q_FUNC_INFO << "byteArray.size()  =  " << byteArray.size();
-  mImagesById[id] = fromByteArray( byteArray ) ;
-  qDebug() << Q_FUNC_INFO << " mColorsImage.isNull()=" << mImagesById[id].isNull();
+
+  mColorsImagesById[id].image = fromByteArray( byteArray )  ;
+  mColorsImagesById[id].lastTouched = QDateTime::currentDateTime();
+  qDebug() << Q_FUNC_INFO << " mColorsImage.isNull()=" << mColorsImagesById[id].image.isNull();
+}
+
+QImage RequestDispatcher::getColorsImage( const QString& id )
+{
+  mColorsImagesById[id].lastTouched = QDateTime::currentDateTime();
+  return  mColorsImagesById[id].image;
 }
 
 bool RequestDispatcher::canTileImage( const QString& id ) {return  getImageData( id ).img.wrap_view  != nullptr; }
@@ -198,7 +233,7 @@ QByteArray RequestDispatcher::caContinue( const QString& id, int nturns, double 
 ImageData& RequestDispatcher::getImageData( const QString& id )
 {
   ImageMetaData& data = mImageDataById[id];
-  data.lastTouched = std::chrono::system_clock::now();
+  data.lastTouched = QDateTime::currentDateTime();
   return data.imageData;
 }
 
@@ -206,6 +241,7 @@ void RequestDispatcher::setImageData( const QString& id, ImageData& imageData )
 {
   ImageMetaData& data = mImageDataById[id];
   data.imageData = imageData;
-  data.lastTouched = std::chrono::system_clock::now();
+  data.lastTouched = QDateTime::currentDateTime();
 }
+
 
