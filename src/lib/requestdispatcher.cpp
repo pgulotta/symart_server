@@ -14,29 +14,32 @@
 #include <unordered_map>
 
 
-const qint64  PurgeImagesTimerIntervalMs {1800000};  // 30 Minutes =1,800,000 Milliseconds
+//const qint64  PurgeImagesTimerIntervalMs {1800000};  // 30 Minutes =1,800,000 Milliseconds
 
+const qint64  PurgeImagesTimerIntervalMs {60000};  // 1 Minute
 
-void RequestDispatcher::onPurgeImagesTimer()
+void RequestDispatcher::purgeOldImages()
 {
-  purgeImagesTimer->stop();
+
   auto now = QDateTime::currentDateTime();
+  qDebug() << Q_FUNC_INFO << "executing";
+  int  removedCounter{0};
 
+  for ( auto& pair : mImageDataById ) {
+    QDateTime& lastTouched = pair.second.lastTouched;
 
-//  auto startOldImageData = std::remove_if( std::begin( mImageDataById ), std::end( mImageDataById ),
-//  [ = ](  auto  item ) {return item.second.lastTouched.addMSecs( PurgeImagesTimerIntervalMs ) > now; } );
-// mImageDataById.erase( startOldImageData, std::end( mImageDataById ) );
+    if ( lastTouched.addMSecs( PurgeImagesTimerIntervalMs ) > now ) {
+      qDebug() << Q_FUNC_INFO << "Purging ImageMetaData where id = " << pair.first;
+      mImageDataById.erase( pair.first );
+      removedCounter++;
+    }
 
-//  auto startOldColorImages = std::remove_if( std::begin( mColorsImagesById ), std::end( mColorsImagesById ),
-//  [ = ]( const auto & item ) {return item.second.lastTouched.addMSecs( PurgeImagesTimerIntervalMs ) > now; } );
-// mColorsImagesById.erase( startOldColorImages, std::end( mColorsImagesById ) );
+    if ( removedCounter > 0 ) {
+      qDebug() << Q_FUNC_INFO << "Purged old ImageMetaData count = " << removedCounter;
+    }
+  }
 
-  purgeImagesTimer->start( PurgeImagesTimerIntervalMs );
-}
-
-RequestDispatcher::RequestDispatcher( QObject* parent ):   QObject{parent}
-{
-  connect( purgeImagesTimer.get(), &QTimer::timeout, this, &RequestDispatcher::onPurgeImagesTimer );
+  // todo mColorsImagesById
 }
 
 QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )

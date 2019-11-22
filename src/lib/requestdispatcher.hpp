@@ -12,15 +12,11 @@ class ImageData;
 struct ImageMetaData;
 struct ColorsImage;
 
-class RequestDispatcher final : public QObject
+class RequestDispatcher
 {
-  Q_OBJECT
-signals:
-private slots:
-  void onPurgeImagesTimer();
 
 public:
-  explicit RequestDispatcher( QObject* parent = nullptr );
+  void purgeOldImages();
 
   bool canTileImage( const QString& id );
 
@@ -103,7 +99,7 @@ private:
 
   std::map<QString, ImageMetaData> mImageDataById;
   std::map<QString, ColorsImage> mColorsImagesById;
-  std::unique_ptr<QTimer> purgeImagesTimer { new QTimer};
+
 
 };
 
