@@ -14,7 +14,7 @@
 #include <QThreadPool>
 #include <QMutexLocker>
 
-const qint64  PurgeImagesTimerIntervalMs {1800000};  // 30 Minutes =1,800,000 Milliseconds
+const qint64  PurgeImagesTimerIntervalMs {900000};  // 15 Minutes =900,000 Milliseconds
 //const qint64  PurgeImagesTimerIntervalMs {60000};  // 1 Minute
 
 RequestDispatcher::RequestDispatcher( ) :
@@ -39,7 +39,7 @@ void RequestDispatcher::setImageData( const QString& id, ImageData& imageData )
   mImageDataById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
 }
 
-void RequestDispatcher::purgeOldImageMetaDatas( const qint64& agedTimeMSecsSinceEpoch )
+int RequestDispatcher::purgeOldImageMetaDatas( const qint64& agedTimeMSecsSinceEpoch )
 {
   int  removedCounter{0};
   QMutexLocker lock{&mImageDataMutex};
@@ -53,11 +53,10 @@ void RequestDispatcher::purgeOldImageMetaDatas( const qint64& agedTimeMSecsSince
     }
   }
 
-  qInfo() << QDateTime::currentDateTime().toString( Qt::DateFormat::ISODateWithMs )  <<
-          "Purged old ImageMetaData count = " << removedCounter;
+  return removedCounter;
 }
 
-void RequestDispatcher::purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch )
+int RequestDispatcher::purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch )
 {
   int  removedCounter{0};
   QMutexLocker lock{&mColorsImagesMutex};
@@ -72,17 +71,22 @@ void RequestDispatcher::purgeOldColorsImages( const qint64& agedTimeMSecsSinceEp
     }
   }
 
-  qInfo() << QDateTime::currentDateTime().toString( Qt::DateFormat::ISODateWithMs )  <<
-          "Purged old Colors Images count = " << removedCounter;
+  return removedCounter;
 }
 
 
 void RequestDispatcher::purgeOldImages()
 {
   auto agedTimeMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
+  QString now{ QDateTime::currentDateTime().toString( Qt::DateFormat::ISODateWithMs )  };
+  //qDebug() << Q_FUNC_INFO << now;
   QThread::msleep( PurgeImagesTimerIntervalMs );
-  purgeOldImageMetaDatas( agedTimeMSecsSinceEpoch );
-  purgeOldColorsImages( agedTimeMSecsSinceEpoch );
+  int purgedOldImageMetaDatas = purgeOldImageMetaDatas( agedTimeMSecsSinceEpoch );
+  int purgedOldColorsImages = purgeOldColorsImages( agedTimeMSecsSinceEpoch );
+
+  qInfo() << now <<
+          "  Purged old ImageMetaData count = " << purgedOldImageMetaDatas <<
+          "  Purged old Colors Images count = " << purgedOldColorsImages;
 }
 
 QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )

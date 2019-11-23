@@ -98,8 +98,8 @@ public:
 private:
   ImageData& getImageData( const QString& id );
   void setImageData( const QString& id, ImageData& imageData );
-  void purgeOldImageMetaDatas( const qint64& agedTimeMSecsSinceEpoch );
-  void purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch );
+  int purgeOldImageMetaDatas( const qint64& agedTimeMSecsSinceEpoch );
+  int purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch );
   QMutex mImageDataMutex;
   QMutex mColorsImagesMutex;
   std::map<QString, ImageMetaData> mImageDataById;
