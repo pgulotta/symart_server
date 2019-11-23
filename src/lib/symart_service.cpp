@@ -7,6 +7,11 @@
 
 static RequestDispatcher requestDispatcher;
 
+void purgeOldImages()
+{
+  requestDispatcher.purgeOldImages();
+}
+
 bool toBool( const QString& text )
 {
   if ( text == "false" ) {

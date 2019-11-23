@@ -12,6 +12,7 @@ CONFIG -=  app_bundle
 DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += $$files(*.hpp, true)
+
 SOURCES += $$files(*.cpp, true)
 
 INCLUDEPATH += $$PWD/src

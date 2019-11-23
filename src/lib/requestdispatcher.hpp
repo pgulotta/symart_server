@@ -1,9 +1,11 @@
 ﻿#pragma once
 
 #include "imagedata.hpp"
+#include "purgeoldimageshandler.hpp"
 #include <map>
-#include <QDateTime>
-#include <QTimer>
+#include <QMutex>
+
+
 
 class QByteArray;
 class QImage;
@@ -14,8 +16,9 @@ struct ColorsImage;
 
 class RequestDispatcher
 {
-
 public:
+  RequestDispatcher( );
+
   void purgeOldImages();
 
   bool canTileImage( const QString& id );
@@ -95,21 +98,23 @@ public:
 private:
   ImageData& getImageData( const QString& id );
   void setImageData( const QString& id, ImageData& imageData );
-
-
+  void purgeOldImageMetaDatas( const qint64& agedTimeMSecsSinceEpoch );
+  void purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch );
+  QMutex mImageDataMutex;
+  QMutex mColorsImagesMutex;
   std::map<QString, ImageMetaData> mImageDataById;
   std::map<QString, ColorsImage> mColorsImagesById;
-
+  std::shared_ptr<PurgeOldImagesHandler> mPurgeOldImagesHandler;
 
 };
 
 struct ImageMetaData {
   ImageData imageData;
-  QDateTime lastTouched;
+  qint64 lastTouched;
 };
 
 struct ColorsImage {
   QImage image;
-  QDateTime lastTouched;
+  qint64 lastTouched;
 };
 

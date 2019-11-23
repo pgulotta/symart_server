@@ -10,36 +10,79 @@
 #include <QImage>
 #include <QBuffer>
 #include <QDebug>
-#include <algorithm>
-#include <unordered_map>
+#include <QDateTime>
+#include <QThreadPool>
+#include <QMutexLocker>
 
+const qint64  PurgeImagesTimerIntervalMs {1800000};  // 30 Minutes =1,800,000 Milliseconds
+//const qint64  PurgeImagesTimerIntervalMs {60000};  // 1 Minute
 
-//const qint64  PurgeImagesTimerIntervalMs {1800000};  // 30 Minutes =1,800,000 Milliseconds
-
-const qint64  PurgeImagesTimerIntervalMs {60000};  // 1 Minute
-
-void RequestDispatcher::purgeOldImages()
+RequestDispatcher::RequestDispatcher( ) :
+  mPurgeOldImagesHandler{new PurgeOldImagesHandler}
 {
+  mPurgeOldImagesHandler->setAutoDelete( true );
+  QThreadPool::globalInstance()->start( mPurgeOldImagesHandler.get() );
+}
 
-  auto now = QDateTime::currentDateTime();
-  qDebug() << Q_FUNC_INFO << "executing";
+ImageData& RequestDispatcher::getImageData( const QString& id )
+{
+  QMutexLocker lock{&mImageDataMutex};
+  ImageMetaData& data = mImageDataById[id];
+  data.lastTouched = QDateTime::currentMSecsSinceEpoch();
+  return data.imageData;
+}
+
+void RequestDispatcher::setImageData( const QString& id, ImageData& imageData )
+{
+  QMutexLocker lock{&mImageDataMutex};
+  mImageDataById[id].imageData = imageData;
+  mImageDataById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
+}
+
+void RequestDispatcher::purgeOldImageMetaDatas( const qint64& agedTimeMSecsSinceEpoch )
+{
   int  removedCounter{0};
+  QMutexLocker lock{&mImageDataMutex};
 
   for ( auto& pair : mImageDataById ) {
-    QDateTime& lastTouched = pair.second.lastTouched;
+    qint64& lastTouched = pair.second.lastTouched;
 
-    if ( lastTouched.addMSecs( PurgeImagesTimerIntervalMs ) > now ) {
-      qDebug() << Q_FUNC_INFO << "Purging ImageMetaData where id = " << pair.first;
+    if ( agedTimeMSecsSinceEpoch > lastTouched ) {
       mImageDataById.erase( pair.first );
       removedCounter++;
     }
+  }
 
-    if ( removedCounter > 0 ) {
-      qDebug() << Q_FUNC_INFO << "Purged old ImageMetaData count = " << removedCounter;
+  qInfo() << QDateTime::currentDateTime().toString( Qt::DateFormat::ISODateWithMs )  <<
+          "Purged old ImageMetaData count = " << removedCounter;
+}
+
+void RequestDispatcher::purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch )
+{
+  int  removedCounter{0};
+  QMutexLocker lock{&mColorsImagesMutex};
+
+  for ( auto& pair : mColorsImagesById ) {
+    qint64 lastTouched = pair.second.lastTouched;
+
+    if ( agedTimeMSecsSinceEpoch > lastTouched ) {
+      //qDebug() << Q_FUNC_INFO << "Purging ColorsImage where id = " << pair.first;
+      mColorsImagesById.erase( pair.first );
+      removedCounter++;
     }
   }
 
-  // todo mColorsImagesById
+  qInfo() << QDateTime::currentDateTime().toString( Qt::DateFormat::ISODateWithMs )  <<
+          "Purged old Colors Images count = " << removedCounter;
+}
+
+
+void RequestDispatcher::purgeOldImages()
+{
+  auto agedTimeMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
+  QThread::msleep( PurgeImagesTimerIntervalMs );
+  purgeOldImageMetaDatas( agedTimeMSecsSinceEpoch );
+  purgeOldColorsImages( agedTimeMSecsSinceEpoch );
 }
 
 QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )
@@ -71,15 +114,16 @@ QByteArray RequestDispatcher::makeHyperbolic( const QString& id, int size,  int 
 void RequestDispatcher::loadColorsImage( const QString& id, const QByteArray& byteArray )
 {
   qDebug() << Q_FUNC_INFO << "byteArray.size()  =  " << byteArray.size();
-
+  QMutexLocker lock{&mColorsImagesMutex};
   mColorsImagesById[id].image = fromByteArray( byteArray )  ;
-  mColorsImagesById[id].lastTouched = QDateTime::currentDateTime();
+  mColorsImagesById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
   qDebug() << Q_FUNC_INFO << " mColorsImage.isNull()=" << mColorsImagesById[id].image.isNull();
 }
 
 QImage RequestDispatcher::getColorsImage( const QString& id )
 {
-  mColorsImagesById[id].lastTouched = QDateTime::currentDateTime();
+  QMutexLocker lock{&mColorsImagesMutex};
+  mColorsImagesById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
   return  mColorsImagesById[id].image;
 }
 
@@ -233,18 +277,5 @@ QByteArray RequestDispatcher::caContinue( const QString& id, int nturns, double 
   return toByteArray( QImage{makeImage( getImageData( id ).img )} );
 }
 
-ImageData& RequestDispatcher::getImageData( const QString& id )
-{
-  ImageMetaData& data = mImageDataById[id];
-  data.lastTouched = QDateTime::currentDateTime();
-  return data.imageData;
-}
-
-void RequestDispatcher::setImageData( const QString& id, ImageData& imageData )
-{
-  ImageMetaData& data = mImageDataById[id];
-  data.imageData = imageData;
-  data.lastTouched = QDateTime::currentDateTime();
-}
 
 
