@@ -240,23 +240,23 @@ QByteArray RequestDispatcher::paintHyperbolicLines( const QString& id, int size,
   return toByteArray( QImage{makeImage( getImageData( id ).img )} );
 }
 
-QByteArray RequestDispatcher::drawTrap( const QString& id, int sz, int symGroup )
+QByteArray RequestDispatcher::drawTrap( const QString& id, int colRed, int colGreen, int colBlue, int sz, int symGroup )
 {
-  drawtrap( getImageData( id ), sz,  symGroup );
+  drawtrap( getImageData( id ), colRed, colGreen, colBlue, sz,  symGroup );
   return toByteArray( QImage{makeImage( getImageData( id ).img )} );
 }
 
-QByteArray RequestDispatcher::drawQuasiTrap( const QString& id, int width, int height, int symmetry,
-                                             double quasiperiod )
+QByteArray RequestDispatcher::drawQuasiTrap( const QString& id, int colRed, int colGreen, int colBlue, int width,
+                                             int height, int symmetry, double quasiperiod )
 {
-  drawquasitrap( getImageData( id ), width,  height,  symmetry,  quasiperiod );
+  drawquasitrap( getImageData( id ), colRed, colGreen, colBlue, width,  height,  symmetry,  quasiperiod );
   return toByteArray( QImage{makeImage( getImageData( id ).img )} );
 }
 
-QByteArray RequestDispatcher::drawQuasiTrapPoly( const QString& id, int width, int height, int symmetry,
-                                                 double quasiperiod )
+QByteArray RequestDispatcher::drawQuasiTrapPoly( const QString& id, int col1Red, int col1Green, int col1Blue,
+                                                 int width, int height, int symmetry, double quasiperiod )
 {
-  drawquasitrap_poly( getImageData( id ), width,  height,  symmetry,  quasiperiod );
+  drawquasitrap_poly( getImageData( id ), col1Red,  col1Green,  col1Blue, width,  height,  symmetry,  quasiperiod );
   return toByteArray( QImage{makeImage( getImageData( id ).img )} );
 }
 

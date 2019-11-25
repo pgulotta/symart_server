@@ -43,12 +43,14 @@ void paint_stripes( ImageData& imageData, int sz, int symGroup, double alpha );
 
 void paint_clusters( ImageData& imageData, int sz, int symGroup, double alpha );
 
-void drawtrap( ImageData& imageData, int sz, int symGroup );
+void drawtrap( ImageData& imageData, int colRed, int colGreen, int colBlue, int sz, int symGroup );
 
 
-void drawquasitrap( ImageData& imageData, int width, int height, int symmetryValueIndex, double quasiperiod );
+void drawquasitrap( ImageData& imageData, int colRed, int colGreen, int colBlue, int width, int height,
+                    int symmetryValueIndex, double quasiperiod );
 
-void drawquasitrap_poly( ImageData& imageData, int width, int height, int symmetryValueIndex, double quasiperiod );
+void drawquasitrap_poly( ImageData& imageData, int col1Red, int col1Green, int col1Blue, int width, int height,
+                         int symmetryValueIndex, double quasiperiod );
 
 enum class walk_fill { AREA, LENGTH };
 

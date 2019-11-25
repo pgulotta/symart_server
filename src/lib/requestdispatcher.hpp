@@ -51,8 +51,8 @@ public:
 
 
   QByteArray paintHyperbolicClouds( const QString& id, int size, int fdfIndex, int rotation0, int rotation1,
-                                    int rotation2,
-                                    int rotation3, int projType, int col1Red, int col1Green, int col1Blue, int col2Red, int col2Green, int col2Blue,
+                                    int rotation2, int rotation3, int projType, int col1Red, int col1Green,
+                                    int col1Blue, int col2Red, int col2Green, int col2Blue,
                                     int col3Red, int col3Green, int col3Blue, int distributionIndex );
 
   QByteArray paintLines( const QString& id, int size, int symmmetryGroup, int ncolors,
@@ -82,11 +82,13 @@ public:
 
   QByteArray drawWalk2( const QString& id,  int width, int height, bool balanced, int walkFill );
 
-  QByteArray drawTrap( const QString& id, int sz, int symGroup );
+  QByteArray drawTrap( const QString& id, int colRed, int colGreen, int colBlue, int sz, int symGroup );
 
-  QByteArray drawQuasiTrap( const QString& id, int width, int height, int symmetry, double quasiperiod );
+  QByteArray drawQuasiTrap( const QString& id, int colRed, int colGreen, int colBlue, int width, int height, int symmetry,
+                            double quasiperiod );
 
-  QByteArray drawQuasiTrapPoly( const QString& id, int width, int height, int symmetry, double quasiperiod );
+  QByteArray drawQuasiTrapPoly( const QString& id, int col1Red, int col1Green, int col1Blue, int width, int height,
+                                int symmetry, double quasiperiod );
 
   QByteArray caGenerateImage( const QString& id, int width, int height, int ruleIndex, int left, int top, int right,
                               int bottom,

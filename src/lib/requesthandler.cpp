@@ -50,7 +50,7 @@ public :
 
   void initDrawingGetFuncs()
   {
-    //  example:  http://localhost:60564/get?trap/id123/200/5  http://localhost:60564/get?walk2/id123/400/200/false/1  http://localhost:60564/get?hexagonalStretch/id123
+    //  example:  http://localhost:60564/get?trap/id123//32/74/135/256/8  http://localhost:60564/get?walk2/id123/400/200/false/1  http://localhost:60564/get?hexagonalStretch/id123
     drawingGetFuncs.clear();
 
     drawingGetFuncs.emplace( "lastImage",  [ = ]( QStringList & list ) {  return lastGeneratedImage( list[1] );  } );
@@ -109,12 +109,21 @@ public :
                                    list[6].toInt(),  list[7].toInt(), list[8].toInt(), list[9].toInt(),
                                    list[10].toFloat(), list[11].toFloat(), list[12].toInt() );
     } );
+    drawingGetFuncs.emplace( "trap",  [ = ]( QStringList & list ) {
+      return drawTrap( list[1], list[2].toInt(), list[3].toInt(),
+                       list[4].toInt(), list[5].toInt(), list[6].toInt() );
+    } );
 
-    drawingGetFuncs.emplace( "trap",  [ = ]( QStringList & list ) {  return drawTrap( list[1], list[2].toInt(), list[3].toInt() );  } );
+    drawingGetFuncs.emplace( "quasiTrap",  []( QStringList & list ) {
+      return drawQuasiTrap( list[1], list[2].toInt(), list[3].toInt(), list[4].toInt(),
+                            list[5].toInt(), list[6].toInt(),  list[7].toInt(), list[8].toDouble() );
+    } );
 
-    drawingGetFuncs.emplace( "quasiTrap",  []( QStringList & list ) { return drawQuasiTrap( list[1], list[2].toInt(), list[3].toInt(),  list[4].toInt(), list[5].toDouble() );  } );
-
-    drawingGetFuncs.emplace( "quasiTrapPoly",  []( QStringList & list ) { return drawQuasiTrapPoly( list[1], list[2].toInt(), list[3].toInt(),  list[4].toInt(), list[5].toDouble() );  } );
+    drawingGetFuncs.emplace( "quasiTrapPoly",  []( QStringList & list ) {
+      return drawQuasiTrapPoly( list[1], list[2].toInt(), list[3].toInt(),
+                                list[4].toInt(), list[5].toInt(), list[6].toInt(),
+                                list[7].toInt(), list[8].toDouble() );
+    } );
 
     drawingGetFuncs.emplace( "caStart",  [ = ]( QStringList & list ) {
       return caGenerateImage( list[1], list[2].toInt(), list[3].toInt(), list[4].toInt(), list[5].toInt(), list[6].toInt(),
@@ -142,11 +151,11 @@ public :
     drawingTestFuncs.emplace( "hyperbolicLines", []() { return paintHyperbolicLines( "test",  400, 2, 3, 2, 2, 2, 1, 1, 1.0, 1.50,  11 );} );
     drawingTestFuncs.emplace( "lines", []() { return paintLines( "test", 400, 13, 5, "Line", 2, true, "Curl", 4, true, "Beads", 6, true  );} );
     drawingTestFuncs.emplace( "quasiPeriodicStripes",  []() { return paintQuasiperiodicStripes( "test", 400, 20, 1.5 );} );
-    drawingTestFuncs.emplace( "quasiTrap", []() { return drawQuasiTrap( "test", 400, 400, 8,  66.6 );} );
-    drawingTestFuncs.emplace( "quasiTrapPoly", []() { return drawQuasiTrapPoly( "test", 200, 200, 7,  44.4 );} );
+    drawingTestFuncs.emplace( "quasiTrap", []() { return drawQuasiTrap( "test", 55, 178, 222, 400, 400, 8,  66.6 );} );
+    drawingTestFuncs.emplace( "quasiTrapPoly", []() { return drawQuasiTrapPoly( "test", 55, 178, 222, 200, 200, 7,  44.4 );} );
     drawingTestFuncs.emplace( "squiggles",  []() { return paintSquiggles( "test", 15, 512, 10, 1.3, 1.50, 1.3, 1.5 );} );
     drawingTestFuncs.emplace( "stripes",  []() { return paintStripes( "test", 600, 5, .50 );} );
-    drawingTestFuncs.emplace( "trap", []() { return drawTrap( "test", 144, 8 );} );
+    drawingTestFuncs.emplace( "trap", []() { return drawTrap( "test", 32, 74, 135, 144, 8 );} );
     drawingTestFuncs.emplace( "walk", []() { return drawWalk( "test", 200, 400, true, 0 );} );
     drawingTestFuncs.emplace( "walk2", []() { return drawWalk( "test", 400, 200, false, 1 );} );
   }

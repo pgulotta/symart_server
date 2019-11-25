@@ -157,19 +157,21 @@ QByteArray paintHyperbolicLines( const QString& id,  int size, int fdfIndex, int
                                                  rotation3,  projType,  flipType,  thickness,  sharpness,  ncolors );
 }
 
-QByteArray drawTrap( const QString& id,  int sz, int symGroup )
+QByteArray drawTrap( const QString& id, int col1Red, int col1Green, int col1Blue, int sz, int symGroup )
 {
-  return requestDispatcher.drawTrap( id, sz,  symGroup );
+  return requestDispatcher.drawTrap( id, col1Red, col1Green, col1Blue, sz, symGroup );
 }
 
-QByteArray drawQuasiTrap( const QString& id,  int width, int height, int symmetry, double quasiperiod )
+QByteArray drawQuasiTrap( const QString& id, int colRed, int colGreen, int colBlue, int width, int height,
+                          int symmetry, double quasiperiod )
 {
-  return  requestDispatcher.drawQuasiTrap( id, width,  height,  symmetry,  quasiperiod );
+  return  requestDispatcher.drawQuasiTrap( id, colRed, colGreen, colBlue, width,  height,  symmetry,  quasiperiod );
 }
 
-QByteArray drawQuasiTrapPoly( const QString& id,  int width, int height, int symmetry, double quasiperiod )
+QByteArray drawQuasiTrapPoly( const QString& id,  int col1Red, int col1Green, int col1Blue, int width, int height,
+                              int symmetry, double quasiperiod )
 {
-  return  requestDispatcher.drawQuasiTrapPoly( id, width,  height,  symmetry,  quasiperiod );
+  return  requestDispatcher.drawQuasiTrapPoly( id, col1Red, col1Green, col1Blue, width,  height,  symmetry, quasiperiod );
 }
 
 QByteArray paintQuasiperiodicStripes( const QString& id,  int size, int fftsize, double alpha )

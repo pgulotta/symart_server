@@ -72,11 +72,13 @@ QByteArray drawWalk( const QString& id, int width, int height, bool balanced, in
 
 QByteArray drawWalk2( const QString& id, int width, int height, bool balanced, int walkFill );
 
-QByteArray drawTrap( const QString& id,  int sz, int symGroup );
+QByteArray drawTrap( const QString& id, int col1Red, int col1Green, int col1Blue, int sz, int symGroup );
 
-QByteArray drawQuasiTrap( const QString& id,  int width, int height, int symmetry, double quasiperiod );
+QByteArray drawQuasiTrap( const QString& id, int col1Red, int col1Green, int col1Blue, int width, int height,
+                          int symmetry, double quasiperiod );
 
-QByteArray drawQuasiTrapPoly( const QString& id,  int width, int height, int symmetry, double quasiperiod );
+QByteArray drawQuasiTrapPoly( const QString& id, int col1Red, int col1Green, int col1Blue,  int width, int height,
+                              int symmetry, double quasiperiod );
 
 QByteArray caGenerateImage( const QString& id,  int width, int height, int ruleIndex, int left, int top, int right,
                             int bottom, int nturns, double intensity );

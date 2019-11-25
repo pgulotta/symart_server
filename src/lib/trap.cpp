@@ -473,13 +473,16 @@ function<double( double, double )> distfunc( symgroup sg )
 
 using std::max;
 
-void drawtrap( ImageData& imageData, int sz, int symGroup )
+void drawtrap( ImageData& imageData, int colRed, int colGreen, int colBlue, int sz, int symGroup )
 {
   symgroup sg{static_cast<symgroup>( symGroup )};
   symmetric_canvas<color_t> c( sz, sg );
   canvas<color_t>& cc = c.unsafe_get_canvas();
   iterfunc f = random_iterfunc( c.group() );
   auto d = distfunc( c.group() );
+
+
+  QColor color {colRed, colGreen, colBlue};
   # pragma omp parallel for
 
   for ( int yy = 0; yy < c.size(); yy++ )
@@ -494,8 +497,10 @@ void drawtrap( ImageData& imageData, int sz, int symGroup )
         }
       }
 
+
       uint8_t v = colorchop( 64 * ( dm + 2 ) );
-      cc( xx, yy ) = color_t( v, v, v );
+      QColor newColor = QColor::fromHsv( color.hue(), color.saturation(), v, 0 );
+      cc( xx, yy ) = color_t( newColor.red(), newColor.green(), newColor.blue() );
     }
 
   imageData.layers.reset();
@@ -843,7 +848,8 @@ qpiterfunc random_qpiterfunc12()
   };
 }
 
-void drawquasitrap_poly( ImageData& imageData, int width, int height, int symmetryValueIndex, double quasiperiod )
+void drawquasitrap_poly( ImageData& imageData, int colRed, int colGreen, int colBlue, int width, int height,
+                         int symmetryValueIndex, double quasiperiod )
 {
   canvas<color_t> c( width, height );
   double xr = random_angle(), yr = random_angle(), zr = random_angle(), wr = random_angle();
@@ -871,6 +877,7 @@ void drawquasitrap_poly( ImageData& imageData, int width, int height, int symmet
     d = qpdistfunc5;
   }
 
+  QColor color {colRed, colGreen, colBlue};
   #pragma omp parallel for
 
   for ( int yy = 0; yy < c.height(); yy++ )
@@ -886,14 +893,16 @@ void drawquasitrap_poly( ImageData& imageData, int width, int height, int symmet
 
       double dm = d( px, py, pz, pw );
       uint8_t v = colorchop( 128 * ( dm + 1 ) );
-      c( xx, yy ) = color_t( v, v, v );
+      QColor newColor = QColor::fromHsv( color.hue(), color.saturation(), v, 0 );
+      c( xx, yy ) = color_t( newColor.red(), newColor.green(), newColor.blue() );
     }
 
   imageData.layers.reset();
   imageData.img =  std::make_shared<canvas<color_t>>( c );
 }
 
-void drawquasitrap( ImageData& imageData, int width, int height, int symmetryValueIndex, double quasiperiod )
+void drawquasitrap( ImageData& imageData, int colRed, int colGreen, int colBlue, int width, int height,
+                    int symmetryValueIndex, double quasiperiod )
 {
   canvas<color_t> c( width, height );
   double xr = random_angle(), yr = random_angle(), zr = random_angle(), wr = random_angle();
@@ -921,6 +930,7 @@ void drawquasitrap( ImageData& imageData, int width, int height, int symmetryVal
     d = qdistfunc5;
   }
 
+  QColor color {colRed, colGreen, colBlue};
   # pragma omp parallel for
 
   for ( int yy = 0; yy < c.height(); yy++ )
@@ -935,7 +945,8 @@ void drawquasitrap( ImageData& imageData, int width, int height, int symmetryVal
 
       double dm = d( x, y, z, w );
       uint8_t v = colorchop( 128 * ( dm + 1 ) );
-      c( xx, yy ) = color_t( v, v, v );
+      QColor newColor = QColor::fromHsv( color.hue(), color.saturation(), v, 0 );
+      c( xx, yy ) = color_t( newColor.red(), newColor.green(), newColor.blue() );
     }
 
   imageData.layers.reset();
