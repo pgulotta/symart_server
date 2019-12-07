@@ -91,27 +91,51 @@ void RequestDispatcher::purgeOldImages()
 
 QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )
 {
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto imageData { getImageData( id )};
+
+  if ( imageData.img.data == nullptr )
+    return {QByteArray()};
+
+  return toByteArray( QImage{makeImage( imageData.img )} );
 }
 
 QByteArray RequestDispatcher::hexagonalStretch( const QString& id )
 {
-  auto img = hexagonal_stretch( *( getImageData( id ).img.sym_view ) );
+  auto imageData { getImageData( id )};
+
+  if ( imageData.img.data == nullptr )
+    return {QByteArray()};
+
+  auto img = hexagonal_stretch( *( imageData.img.sym_view ) );
+
   auto newImageData{ImageData( std::move( img ), nullptr, false )};
+
   return toByteArray( QImage{makeImage( newImageData.img )} );
 }
 
 QByteArray RequestDispatcher::randomizeTiles( const QString& id, int xtiles, int ytiles )
 {
-  wrap_canvas<color_t> img = randomize( xtiles, ytiles, *( getImageData( id ).img.sym_view ) );
+  auto imageData { getImageData( id )};
+
+  if ( imageData.img.data == nullptr )
+    return {QByteArray()};
+
+  wrap_canvas<color_t> img = randomize( xtiles, ytiles, *( imageData.img.sym_view ) );
+
   const auto canvasView = std::make_shared<wrap_canvas<color_t>>( img );
+
   return toByteArray( makeImage( canvasView ) );
 }
 
 QByteArray RequestDispatcher::makeHyperbolic( const QString& id, int size,  int projType )
 {
   auto newImageData =   getImageData( id );
+
+  if ( newImageData.img.data == nullptr )
+    return {QByteArray()};
+
   make_hyperbolic( newImageData, projType, size );
+
   return toByteArray( QImage{makeImage( newImageData.img )} );
 }
 
@@ -131,10 +155,28 @@ QImage RequestDispatcher::getColorsImage( const QString& id )
   return  mColorsImagesById[id].image;
 }
 
-bool RequestDispatcher::canTileImage( const QString& id ) {return  getImageData( id ).img.wrap_view  != nullptr; }
+bool RequestDispatcher::canTileImage( const QString& id )
+{
+  auto imageData { getImageData( id )};
+
+  if ( imageData.img.data == nullptr  ) {
+    return false;
+  }
+
+  return  imageData.img.wrap_view  != nullptr;
+}
 
 
-bool RequestDispatcher::isSymmetricView( const QString& id ) { return getImageData( id ).img.sym_view  != nullptr;}
+bool RequestDispatcher::isSymmetricView( const QString& id )
+{
+  auto imageData { getImageData( id )};
+
+  if ( imageData.img.data == nullptr  ) {
+    return false;
+  }
+
+  return imageData.img.sym_view  != nullptr;
+}
 
 QByteArray RequestDispatcher::paintSquiggles( const QString& id, int ncolors, int size, int symGroup, double alpha,
                                               double exponent, double thickness,
