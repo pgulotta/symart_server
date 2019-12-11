@@ -3,7 +3,8 @@
 #include "imagedata.hpp"
 #include "purgeoldimageshandler.hpp"
 #include <map>
-#include <QMutex>
+#include <mutex>
+
 
 
 
@@ -102,8 +103,8 @@ private:
   void setImageData( const QString& id, ImageData& imageData );
   int purgeOldImageMetaDatas( const qint64& agedTimeMSecsSinceEpoch );
   int purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch );
-  QMutex mImageDataMutex;
-  QMutex mColorsImagesMutex;
+  mutable std::mutex mImageDataMutex;
+  mutable std::mutex mColorsImagesMutex;
   std::map<QString, ImageMetaData> mImageDataById;
   std::map<QString, ColorsImage> mColorsImagesById;
   std::shared_ptr<PurgeOldImagesHandler> mPurgeOldImagesHandler;
