@@ -17,17 +17,15 @@ int main( int argc, char* argv[] )
   QCoreApplication app( argc, argv );
   QCoreApplication::setApplicationName( "symart_server" );
   QCoreApplication::setApplicationVersion( "1.0" );
-  QCommandLineParser parser;
-  parser.setApplicationDescription( "Service that generates symmetric images" );
-  parser.addHelpOption();
-  parser.addVersionOption();
 
   QCommandLineOption definePortOption( QStringList() << "p" << "service-port",
                                        QCoreApplication::translate( "main", "Port the service listens to for symart requests." ),
                                        QCoreApplication::translate( "main", "port" ) );
+  QCommandLineParser parser;
+  parser.setApplicationDescription( "Service that generates symmetric images" );
   parser.addOption( definePortOption );
-  const QCommandLineOption helpOption = parser.addHelpOption();
-  const QCommandLineOption versionOption = parser.addVersionOption();
+  parser.addHelpOption();
+  parser.addVersionOption();
   parser.process( app );
 
   int port{60564};
