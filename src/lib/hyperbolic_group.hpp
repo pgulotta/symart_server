@@ -22,7 +22,6 @@
 #define _HYPERBOLIC_GROUP_H
 
 #include <functional>
-#include <mutex>
 #include <unordered_map>
 #include <vector>
 #include "hyperbolic.hpp"
@@ -107,7 +106,6 @@ private:
   std::tuple<hyperbolic_coord, bool> fundamental_domain_alternating( const hyperbolic_coord& hc ) const;
   std::tuple<hyperbolic_coord, bool> fundamental_domain_random( const hyperbolic_coord& hc ) const;
   mutable std::unordered_map<long, bool> random_flips;
-  mutable std::mutex mutex;
   decltype( &hyperbolic_symmetry_group::fundamental_domain ) fdfunc;
 };
 
