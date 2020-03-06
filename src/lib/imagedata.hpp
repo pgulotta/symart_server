@@ -21,8 +21,8 @@ QImage fromByteArray( const QByteArray& ba );
 struct ImageData {
   ImageData() : layers( nullptr ), original( true ) {}
   template<typename U>
-  explicit ImageData( U&& c, const std::shared_ptr< std::vector<layer>> l = nullptr,
-                      bool o = true ) : img( std::forward<U>( c ) ), layers( l ), original( o ) {}
+  ImageData( U&& c,  std::shared_ptr< std::vector<layer>> l,
+             bool o = true ) : img( std::forward<U>( c ) ), layers( l ), original( o ) {}
   CanvasView<color_t> img;
   std::shared_ptr< std::vector<layer>> layers;
   bool original;
