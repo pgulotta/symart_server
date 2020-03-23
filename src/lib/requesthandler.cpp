@@ -157,7 +157,7 @@ public :
     drawingTestFuncs.emplace( "stripes",  []() { return paintStripes( "test", 600, 5, .50 );} );
     drawingTestFuncs.emplace( "trap", []() { return drawTrap( "test", 32, 74, 135, 144, 8 );} );
     drawingTestFuncs.emplace( "walk", []() { return drawWalk( "test", 200, 400, true, 0 );} );
-    drawingTestFuncs.emplace( "walk2", []() { return drawWalk( "test", 400, 200, false, 1 );} );
+    drawingTestFuncs.emplace( "walk2", []() { return drawWalk( "test", 1000, 1000, false, 1 );} );
   }
 
 private:
@@ -195,7 +195,7 @@ private:
           success = true;
         }
       }
-    } catch ( const std::exception ) { }
+    } catch ( const std::exception& e ) { qWarning() << Q_FUNC_INFO << e.what();}
 
 
     if ( !success ) {
@@ -251,7 +251,7 @@ private:
           }
         }
       }
-    } catch ( const std::exception ) { }
+    } catch ( const std::exception& e ) { qWarning() << Q_FUNC_INFO << e.what();}
 
 
     if ( !success ) {
@@ -285,7 +285,7 @@ private:
           }
         }
       }
-    } catch ( const std::exception ) { }
+    } catch ( const std::exception& e ) { qWarning() << Q_FUNC_INFO << e.what();}
 
 
     if ( !success ) {
