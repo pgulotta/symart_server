@@ -21,7 +21,7 @@
 #ifdef FFTWPROGS
 #include "randgen.hpp"
 #include "stripes_common.hpp"
-#include <random>
+
 
 using std::function;
 using std::polar;

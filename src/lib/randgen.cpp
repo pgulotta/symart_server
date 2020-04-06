@@ -123,3 +123,9 @@ int random_weighted( const vector<double>& v )
 {
   return discrete_distribution<>( v.begin(), v.end() )( rnd );
 }
+
+
+int random_symmmetryGroup()
+{
+  return random_range_inclusive( 0, 17 );
+}

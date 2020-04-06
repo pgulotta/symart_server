@@ -28,7 +28,7 @@ int main( int argc, char* argv[] )
   parser.addVersionOption();
   parser.process( app );
 
-  int port{60564};
+  int port{60566};
 
   if ( parser.isSet( definePortOption ) ) {
     auto definedPort =  parser.value( definePortOption ).toInt();

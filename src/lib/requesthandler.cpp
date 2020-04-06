@@ -1,5 +1,6 @@
 #include "requesthandler.hpp"
 #include "symart_service.hpp"
+#include "randgen.hpp"
 #include <QDebug>
 #include <QImage>
 #include <QStringList>
@@ -144,20 +145,19 @@ public :
   {
     // example:  http://localhost:60564/test?quasiPeriodicStripes
     drawingTestFuncs.clear();
-    drawingTestFuncs.emplace( "ca", []() { return caGenerateImage( "test", 600, 600, 3, 295, 295, 305, 305, 300, 2.5   );  } );
-    drawingTestFuncs.emplace( "clouds", []() { return paintClouds( "test",  256, 9, 111, 123, 150, 90, 190, 200, 55, 178, 222, 1 );} );
+    drawingTestFuncs.emplace( "clouds", []() { return paintClouds( "test",  512, random_symmmetryGroup(), 111, 123, 150, 90, 190, 200, 55, 178, 222, 1 );} );
     drawingTestFuncs.emplace( "clusters",  []() { return paintClusters( "test", 400, 3, 1.50 );} );
     drawingTestFuncs.emplace( "hyperbolicClouds",  []() { return paintHyperbolicClouds( "test",  256, 2, 3, 2, 2, 2, 1, 111, 123, 150, 90, 190, 200, 55, 178, 222, 1 );} );
     drawingTestFuncs.emplace( "hyperbolicLines", []() { return paintHyperbolicLines( "test",  400, 2, 3, 2, 2, 2, 1, 1, 1.0, 1.50,  11 );} );
-    drawingTestFuncs.emplace( "lines", []() { return paintLines( "test", 400, 13, 5, "Line", 2, true, "Curl", 4, true, "Beads", 6, true  );} );
-    drawingTestFuncs.emplace( "quasiPeriodicStripes",  []() { return paintQuasiperiodicStripes( "test", 400, 20, 1.5 );} );
-    drawingTestFuncs.emplace( "quasiTrap", []() { return drawQuasiTrap( "test", 55, 178, 222, 400, 400, 8,  66.6 );} );
-    drawingTestFuncs.emplace( "quasiTrapPoly", []() { return drawQuasiTrapPoly( "test", 55, 178, 222, 200, 200, 7,  44.4 );} );
-    drawingTestFuncs.emplace( "squiggles",  []() { return paintSquiggles( "test", 15, 512, 10, 1.3, 1.50, 1.3, 1.5 );} );
-    drawingTestFuncs.emplace( "stripes",  []() { return paintStripes( "test", 600, 5, .50 );} );
+    drawingTestFuncs.emplace( "lines", []() { return paintLines( "test", 512, random_symmmetryGroup(), 20, "Line", 2, true, "Flower", 4, true, "Beads", 6, true  );} );
+    drawingTestFuncs.emplace( "quasiPeriodicStripes",  []() { return paintQuasiperiodicStripes( "test", 1000, 20, 1.5 );} );
+    drawingTestFuncs.emplace( "quasiTrap", []() { return drawQuasiTrap( "test", 55, 178, 222, 768, 768, 8,  66.6 );} );
+    drawingTestFuncs.emplace( "quasiTrapPoly", []() { return drawQuasiTrapPoly( "test", 55, 178, 222, 512, 512, 7,  44.4 );} );
+    drawingTestFuncs.emplace( "squiggles",  []() { return paintSquiggles( "test", 15, 1024, 10, 1.3, 1.50, 1.3, 1.5 );} );
+    drawingTestFuncs.emplace( "stripes",  []() { return paintStripes( "test", 1024, 5, .50 );} );
     drawingTestFuncs.emplace( "trap", []() { return drawTrap( "test", 32, 74, 135, 144, 8 );} );
-    drawingTestFuncs.emplace( "walk", []() { return drawWalk( "test", 200, 400, true, 0 );} );
-    drawingTestFuncs.emplace( "walk2", []() { return drawWalk( "test", 1000, 1000, false, 1 );} );
+    drawingTestFuncs.emplace( "walk", []() { return drawWalk( "test", 512, 768, true, 0 );} );
+    drawingTestFuncs.emplace( "walk2", []() { return drawWalk( "test", 1000, 512, false, 1 );} );
   }
 
 private:

@@ -26,9 +26,9 @@
 
 void seed();
 
-int random_int(int n);
+int random_int( int n );
 
-int random_range_inclusive(int a, int b);
+int random_range_inclusive( int a, int b );
 
 int random_sign();
 
@@ -38,26 +38,28 @@ double random_uniform();
 
 double random_angle();
 
-double random_exponential(double mean);
+double random_exponential( double mean );
 
-double random_cauchy(double width);
+double random_cauchy( double width );
 
-double random_normal(double stdev);
+double random_normal( double stdev );
 
-double random_sechsquare(double width);
+double random_sechsquare( double width );
 
-double random_levy_1d(double alpha, double scale);
+double random_levy_1d( double alpha, double scale );
 
-double random_levy_skew_sqrt(double alpha);
+double random_levy_skew_sqrt( double alpha );
 
-bool random_bernoulli(double p);
+bool random_bernoulli( double p );
 
-int random_poisson(double mu);
+int random_poisson( double mu );
+
+int random_symmmetryGroup();
 
 template<typename T>
-T random_choice(const std::vector<T> &v) { return v[random_int(v.size())]; }
+T random_choice( const std::vector<T>& v ) { return v[random_int( v.size() )]; }
 
-int random_weighted(const std::vector<int> &v);
-int random_weighted(const std::vector<double> &v);
+int random_weighted( const std::vector<int>& v );
+int random_weighted( const std::vector<double>& v );
 
 #endif
