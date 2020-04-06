@@ -29,6 +29,8 @@ QByteArray makeHyperbolic( const QString& id, int size,  int projType );
 
 void loadColorsImage( const QString& id, const QByteArray& byteArray );
 
+QByteArray generateWallpaper();
+
 QByteArray  updateSquiggles( const QString& id, int size, int symGroup );
 
 QByteArray  paintSquiggles( const QString& id,  int ncolors, int size, int symGroup, double alpha, double exponent,

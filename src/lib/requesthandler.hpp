@@ -12,6 +12,7 @@ http://65.60.187.8:60564/test?hyperbolicLines
 
 http://65.60.187.8:60564/test?quasiTrap
 
+http://localhost:60566/wallpaper
 
 */
 

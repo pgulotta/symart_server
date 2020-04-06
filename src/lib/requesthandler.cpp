@@ -204,6 +204,30 @@ private:
     }
   }
 
+  void wallpaperHandler( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
+  {
+    bool success = false;
+
+    try {
+      if ( request.method() == Pistache::Http::Method::Get ) {
+
+        QByteArray bytes {generateWallpaper()};
+        auto stream = response.stream( Pistache::Http::Code::Ok );
+        stream.write( bytes, bytes.size() );
+        stream.flush();
+        stream.ends();
+        success = true;
+      }
+
+    } catch ( const std::exception& e ) { qWarning() << Q_FUNC_INFO << e.what();}
+
+
+    if ( !success ) {
+      response.send( Pistache::Http::Code::Bad_Request, request.query().as_str() +
+                     " is not a valid request. To test the API, enter the request: /ready" );
+    }
+  }
+
   void imageColorsHandler( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
   {
     Q_UNUSED ( request )
@@ -304,6 +328,7 @@ private:
     Routes::Get( router,  "/get", Routes::bind( &SymArtEndpoint::getHandler,  this ) );
     Routes::Get( router,  "/test", Routes::bind( &SymArtEndpoint::testHandler,  this ) );
     Routes::Get( router, "/imageColors", Routes::bind( &SymArtEndpoint::imageColorsHandler,  this ) );
+    Routes::Get( router, "/wallpaper", Routes::bind( &SymArtEndpoint::wallpaperHandler,  this ) );
   }
 
 

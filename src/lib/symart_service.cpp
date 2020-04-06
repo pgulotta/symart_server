@@ -73,6 +73,11 @@ bool isSymmetricView( const QString& id )
   return requestDispatcher.isSymmetricView( id );
 }
 
+QByteArray generateWallpaper()
+{
+  return requestDispatcher.generateWallpaper( );
+}
+
 QByteArray paintSquiggles( const QString& id,  int ncolors, int size, int symGroup, double alpha, double exponent,
                            double thickness, double sharpness )
 {

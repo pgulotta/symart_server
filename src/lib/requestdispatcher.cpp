@@ -85,6 +85,14 @@ void RequestDispatcher::purgeOldImages()
           "  Purged old Colors Images count = " << purgedOldColorsImages;
 }
 
+QByteArray RequestDispatcher::generateWallpaper()
+{
+  ImageMetaData data;
+  data.lastTouched = QDateTime::currentMSecsSinceEpoch();
+  paint_clusters( data.imageData, 512, 6, 1.7 );
+  return toByteArray( QImage{makeImage( data.imageData.img )} );
+}
+
 QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )
 {
   auto imageData { getImageData( id )};

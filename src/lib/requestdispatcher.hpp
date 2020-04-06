@@ -34,6 +34,8 @@ public:
 
   void loadColorsImage( const QString& id, const QByteArray& byteArray );
 
+  QByteArray generateWallpaper();
+
   QImage getColorsImage( const QString& id ) ;
 
   QByteArray  updateSquiggles( const QString& id, int size, int symGroup );
