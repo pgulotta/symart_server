@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *   Copyright (C) 2013 by Daniel Gulotta                                  *
  *   dgulotta@alum.mit.edu                                                 *
  *                                                                         *
@@ -55,6 +55,8 @@ bool random_bernoulli( double p );
 int random_poisson( double mu );
 
 int random_symmmetryGroup();
+
+double random_real_range_inclusive( double a, double b );
 
 template<typename T>
 T random_choice( const std::vector<T>& v ) { return v[random_int( v.size() )]; }

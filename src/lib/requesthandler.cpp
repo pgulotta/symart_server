@@ -341,7 +341,6 @@ private:
 };
 
 
-
 RequestHandler::RequestHandler( int  port )
 {
   unsigned int nthreads = std::thread::hardware_concurrency();

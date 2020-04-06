@@ -124,8 +124,13 @@ int random_weighted( const vector<double>& v )
   return discrete_distribution<>( v.begin(), v.end() )( rnd );
 }
 
-
 int random_symmmetryGroup()
 {
   return random_range_inclusive( 0, 17 );
 }
+
+double random_real_range_inclusive( double a, double b )
+{
+  return uniform_real_distribution<double> ( a, b )( rnd );
+}
+

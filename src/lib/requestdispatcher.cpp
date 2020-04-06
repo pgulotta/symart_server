@@ -7,6 +7,7 @@
 #include "ca_adapter.hpp"
 #include "randomize.hpp"
 #include "symmetric_canvas.hpp"
+#include "wallpapergenerator.hpp"
 #include <QImage>
 #include <QBuffer>
 #include <QDebug>
@@ -87,10 +88,8 @@ void RequestDispatcher::purgeOldImages()
 
 QByteArray RequestDispatcher::generateWallpaper()
 {
-  ImageMetaData data;
-  data.lastTouched = QDateTime::currentMSecsSinceEpoch();
-  paint_clusters( data.imageData, 512, 6, 1.7 );
-  return toByteArray( QImage{makeImage( data.imageData.img )} );
+  WallpaperGenerator generator;
+  return generator.getWallpaper();
 }
 
 QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )
