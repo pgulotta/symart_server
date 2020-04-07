@@ -56,6 +56,8 @@ int random_poisson( double mu );
 
 int random_symmmetryGroup();
 
+int random_distributionIndex();
+
 double random_real_range_inclusive( double a, double b );
 
 template<typename T>

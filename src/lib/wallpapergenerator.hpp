@@ -1,7 +1,9 @@
 #pragma once
 
+#include "imagedata.hpp"
+#include <QByteArray>
 
-class QByteArray;
+
 
 class WallpaperGenerator
 {
@@ -10,6 +12,8 @@ public:
 
 
 private:
+    void generate_clouds( ImageData& imageData);
+    void generate_clusters( ImageData& imageData);
 
 
 };

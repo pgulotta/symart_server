@@ -129,6 +129,11 @@ int random_symmmetryGroup()
   return random_range_inclusive( 0, 17 );
 }
 
+int random_distributionIndex()
+{
+  return random_range_inclusive( 0, 3 );
+}
+
 double random_real_range_inclusive( double a, double b )
 {
   return uniform_real_distribution<double> ( a, b )( rnd );

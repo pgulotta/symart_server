@@ -205,8 +205,8 @@ QByteArray RequestDispatcher::updateSquiggles( const QString& id, int size, int 
 }
 
 QByteArray RequestDispatcher::paintClouds( const QString& id, int size, int symmmetryGroup, int col1Red, int col1Green,
-                                           int col1Blue, int col2Red,
-                                           int col2Green, int col2Blue, int col3Red, int col3Green, int col3Blue, int distributionIndex )
+                                           int col1Blue, int col2Red, int col2Green, int col2Blue, int col3Red, int col3Green, int col3Blue,
+                                           int distributionIndex )
 {
   paint_clouds( getImageData( id ), size, symmmetryGroup, col1Red, col1Green, col1Blue,  col2Red,
                 col2Green, col2Blue, col3Red,  col3Green, col3Blue, distributionIndex );
