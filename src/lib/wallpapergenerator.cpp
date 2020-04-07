@@ -1,4 +1,4 @@
-#include "wallpapergenerator.hpp"
+﻿#include "wallpapergenerator.hpp"
 #include "paintclouds.hpp"
 #include "randgen.hpp"
 #include "generators.hpp"
@@ -13,7 +13,7 @@ static const int IMAGE_SIZE = 512;
 
 QByteArray WallpaperGenerator::getWallpaper()
 {
-  int imageType = random_range_inclusive( 0, 3 );
+  int imageType = random_range_inclusive( 0, 5 );
   ImageData imageData;
 
   try {
@@ -33,6 +33,14 @@ QByteArray WallpaperGenerator::getWallpaper()
     case 3:
       generate_trap( imageData ) ;
       break;
+
+    case 4:
+      generate_quasitrap( imageData ) ;
+      break;
+
+    case 5:
+      generate_quasitrap_poly( imageData ) ;
+      break;
     }
   } catch ( const std::exception& e ) {
     qWarning() << Q_FUNC_INFO << e.what();
@@ -49,6 +57,24 @@ void WallpaperGenerator::generate_trap( ImageData& imageData )
   drawtrap( imageData, color.red, color.green, color.blue, IMAGE_SIZE, random_symmmetryGroup() );
 
 }
+
+void WallpaperGenerator::generate_quasitrap( ImageData& imageData )
+{
+  qInfo() << Q_FUNC_INFO ;
+  color_t color{randomColor()};
+  drawquasitrap( imageData, color.red, color.green, color.blue, IMAGE_SIZE, IMAGE_SIZE, random_range_inclusive( 0, 3 ),
+                 random_real_range_inclusive( IMAGE_SIZE / 8, IMAGE_SIZE ) );
+}
+
+void WallpaperGenerator::generate_quasitrap_poly( ImageData& imageData )
+{
+  qInfo() << Q_FUNC_INFO ;
+  color_t color{randomColor()};
+  drawquasitrap_poly( imageData, color.red, color.green, color.blue, IMAGE_SIZE, IMAGE_SIZE, random_range_inclusive( 0,
+                      3 ),
+                      random_real_range_inclusive( IMAGE_SIZE / 8, IMAGE_SIZE ) );
+}
+
 
 void WallpaperGenerator::generate_clouds( ImageData& imageData )
 {
