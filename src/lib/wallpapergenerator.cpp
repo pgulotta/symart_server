@@ -13,7 +13,7 @@ static const int IMAGE_SIZE = 512;
 
 QByteArray WallpaperGenerator::getWallpaper()
 {
-  int imageType = random_range_inclusive( 0, 2 );
+  int imageType = random_range_inclusive( 0, 3 );
   ImageData imageData;
 
   try {
@@ -29,12 +29,25 @@ QByteArray WallpaperGenerator::getWallpaper()
     case 2:
       generate_lines( imageData ) ;
       break;
+
+    case 3:
+      generate_trap( imageData ) ;
+      break;
     }
   } catch ( const std::exception& e ) {
     qWarning() << Q_FUNC_INFO << e.what();
   }
 
   return toByteArray( QImage{makeImage( imageData.img )} );
+}
+
+
+void WallpaperGenerator::generate_trap( ImageData& imageData )
+{
+  qInfo() << Q_FUNC_INFO ;
+  color_t color{randomColor()};
+  drawtrap( imageData, color.red, color.green, color.blue, IMAGE_SIZE, random_symmmetryGroup() );
+
 }
 
 void WallpaperGenerator::generate_clouds( ImageData& imageData )
@@ -62,7 +75,6 @@ void WallpaperGenerator::generate_lines( ImageData& imageData )
   auto ruleNames{paintlinesRuleNames()};
   const auto ruleNamesMax{ ruleNames.size() - 1};
   QString rule1 { ruleNames.at( random_range_inclusive( 0, ruleNamesMax ) ) };
-  qInfo() << rule1 ;
   int weight1 {random_range_inclusive( 1, 5 ) };
   bool isPastel1{random_bool()};
   QString rule2 { ruleNames.at( random_range_inclusive( 0, ruleNamesMax ) ) };
