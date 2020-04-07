@@ -3,7 +3,7 @@
 #include "paintlines.hpp"
 #include "layer.hpp"
 #include "color.hpp"
-
+#include <QDebug>
 #include <QString>
 #include <QImage>
 #include <memory>
@@ -29,14 +29,21 @@ static  std::map<QString, paintfunc> paintlinesFuncs{
   { "Tree", generate_tree }
 };
 
+static std::vector<QString> ruleNames;
 
-std::vector<QString> paintlinesFunctionNames()
+
+const std::vector<QString>& paintlinesRuleNames()
 {
-  std::vector<QString> names;
-  std::transform( paintlinesFuncs.cbegin(), paintlinesFuncs.cend(), names.begin(),
-  []( auto item ) { return item.first;} );
-  return  names ;
+  if ( ruleNames.empty() ) {
+    for ( const auto& item : paintlinesFuncs ) {
+      ruleNames.push_back( item.first );
+    }
+  }
+
+  qInfo() << "Q_FUNC_INFO" << " size =  " << ruleNames.size();
+  return ruleNames ;
 }
+
 
 const paintfunc& paintlinesFunction( const QString& name )
 {

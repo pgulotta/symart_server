@@ -2,14 +2,15 @@
 
 #include "symmetric_canvas.hpp"
 
-#include <map>
+#include <vector>
 
 class QString;
 class color_t;
 class ImageData;
 
 
-std::vector<QString> paintlinesFunctionNames();
+
+const std::vector<QString>& paintlinesRuleNames();
 
 void paint_lines( ImageData& imageData, int size, int symmmetryGroup, int ncolors,
                   const QString& ruleName1, int weight1, bool isPastel1,

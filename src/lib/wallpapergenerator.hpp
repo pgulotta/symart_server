@@ -14,7 +14,7 @@ public:
 private:
     void generate_clouds( ImageData& imageData);
     void generate_clusters( ImageData& imageData);
-
+    void generate_lines( ImageData& imageData);
 
 };
 

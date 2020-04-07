@@ -126,7 +126,7 @@ int random_weighted( const vector<double>& v )
 
 int random_symmmetryGroup()
 {
-  return random_range_inclusive( 0, 17 );
+  return random_range_inclusive( 0, 16 );
 }
 
 int random_distributionIndex()
