@@ -7,13 +7,14 @@
 #include <QByteArray>
 #include <QDebug>
 #include <exception>
-
+#include "imagedata.hpp"
+#include <QByteArray>
 
 static const int IMAGE_SIZE = 512;
 
 QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
 {
-  int imageType = random_range_inclusive( 0, 7 );
+  int imageType =  random_range_inclusive( 0, 8 );
 
   try {
     switch ( imageType ) {
@@ -49,6 +50,9 @@ QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
       generate_stripes( imageData ) ;
       break;
 
+    case 8:
+      generate_walk( imageData ) ;
+      break;
     }
   } catch ( const std::exception& e ) {
     qWarning() << Q_FUNC_INFO << e.what();
@@ -63,7 +67,6 @@ void WallpaperGenerator::generate_trap( ImageData& imageData )
   qInfo() << Q_FUNC_INFO ;
   color_t color{randomColor()};
   drawtrap( imageData, color.red, color.green, color.blue, IMAGE_SIZE, random_symmmetryGroup() );
-
 }
 
 void WallpaperGenerator::generate_quasitrap( ImageData& imageData )
@@ -89,7 +92,6 @@ void WallpaperGenerator::generate_squiggles( ImageData& imageData )
   auto sharpness{ random_real_range_inclusive( 100.0, 1000.0 )};
   auto alpha{ random_real_range_inclusive( 0.75, 1.75 )};
   auto exponent{ random_real_range_inclusive( 1.0, 16.0 )};
-
   paint_squiggles( imageData, 5, IMAGE_SIZE, random_symmmetryGroup(), alpha, exponent, thickness, sharpness );
 }
 
@@ -97,6 +99,19 @@ void WallpaperGenerator::generate_stripes( ImageData& imageData )
 {
   qInfo() << Q_FUNC_INFO ;
   paint_stripes( imageData, IMAGE_SIZE, random_symmmetryGroup(), random_real_range_inclusive( 0.75, 1.75 ) );
+}
+
+void WallpaperGenerator::generate_walk( ImageData& imageData )
+{
+  qInfo() << Q_FUNC_INFO ;
+  int fill = random_bool() ? 0 : 1;
+  bool isTileable = random_bool();
+
+  if ( isTileable ) {
+    draw_walk( imageData, IMAGE_SIZE, IMAGE_SIZE, random_bool(), fill );
+  } else {
+    draw_walk2( imageData, IMAGE_SIZE, IMAGE_SIZE, random_bool(), fill );
+  }
 }
 
 void WallpaperGenerator::generate_clouds( ImageData& imageData )
@@ -134,8 +149,5 @@ void WallpaperGenerator::generate_lines( ImageData& imageData )
   bool isPastel3{random_bool()};
   paint_lines( imageData, IMAGE_SIZE, random_symmmetryGroup(), 3,
                rule1, weight1, isPastel1, rule2, weight2, isPastel2, rule3, weight3, isPastel3 );
-
-
-
 }
 

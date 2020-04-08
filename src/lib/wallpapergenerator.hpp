@@ -1,9 +1,7 @@
 #pragma once
 
-#include "imagedata.hpp"
-#include <QByteArray>
-
-
+class QByteArray;
+class ImageData;
 
 class WallpaperGenerator
 {
@@ -20,6 +18,7 @@ private:
   void generate_quasitrap_poly( ImageData& imageData );
   void generate_squiggles( ImageData& imageData );
   void generate_stripes( ImageData& imageData );
+  void generate_walk( ImageData& imageData );
 };
 
 
