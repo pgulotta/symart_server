@@ -18,7 +18,7 @@ private:
   void generate_trap( ImageData& imageData );
   void generate_quasitrap( ImageData& imageData );
   void generate_quasitrap_poly( ImageData& imageData );
-
+  void generate_squiggles( ImageData& imageData );
 
 };
 

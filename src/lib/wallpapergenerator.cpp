@@ -13,7 +13,7 @@ static const int IMAGE_SIZE = 512;
 
 QByteArray WallpaperGenerator::getWallpaper()
 {
-  int imageType = random_range_inclusive( 0, 5 );
+  int imageType = random_range_inclusive( 0, 6 );
   ImageData imageData;
 
   try {
@@ -40,6 +40,10 @@ QByteArray WallpaperGenerator::getWallpaper()
 
     case 5:
       generate_quasitrap_poly( imageData ) ;
+      break;
+
+    case 6:
+      generate_squiggles( imageData ) ;
       break;
     }
   } catch ( const std::exception& e ) {
@@ -71,11 +75,19 @@ void WallpaperGenerator::generate_quasitrap_poly( ImageData& imageData )
   qInfo() << Q_FUNC_INFO ;
   color_t color{randomColor()};
   drawquasitrap_poly( imageData, color.red, color.green, color.blue, IMAGE_SIZE, IMAGE_SIZE, random_range_inclusive( 0,
-                      3 ),
-                      random_real_range_inclusive( IMAGE_SIZE / 8, IMAGE_SIZE ) );
+                      3 ), random_real_range_inclusive( IMAGE_SIZE / 8, IMAGE_SIZE ) );
 }
 
+void WallpaperGenerator::generate_squiggles( ImageData& imageData )
+{
+  qInfo() << Q_FUNC_INFO ;
+  auto thickness{ random_real_range_inclusive( 0.1, 10.0 )};
+  auto sharpness{ random_real_range_inclusive( 100.0, 1000.0 )};
+  auto alpha{ random_real_range_inclusive( 0.75, 1.75 )};
+  auto exponent{ random_real_range_inclusive( 1.0, 16.0 )};
 
+  paint_squiggles( imageData, 5, IMAGE_SIZE, random_symmmetryGroup(), alpha, exponent, thickness, sharpness );
+}
 void WallpaperGenerator::generate_clouds( ImageData& imageData )
 {
   qInfo() << Q_FUNC_INFO ;
