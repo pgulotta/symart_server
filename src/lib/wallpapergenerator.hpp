@@ -8,7 +8,7 @@
 class WallpaperGenerator
 {
 public:
-  QByteArray getWallpaper();
+  QByteArray getWallpaper( ImageData& imageData );
 
 
 private:
@@ -19,7 +19,7 @@ private:
   void generate_quasitrap( ImageData& imageData );
   void generate_quasitrap_poly( ImageData& imageData );
   void generate_squiggles( ImageData& imageData );
-
+  void generate_stripes( ImageData& imageData );
 };
 
 

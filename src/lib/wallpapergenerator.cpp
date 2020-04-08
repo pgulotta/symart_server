@@ -11,10 +11,9 @@
 
 static const int IMAGE_SIZE = 512;
 
-QByteArray WallpaperGenerator::getWallpaper()
+QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
 {
-  int imageType = random_range_inclusive( 0, 6 );
-  ImageData imageData;
+  int imageType = random_range_inclusive( 0, 7 );
 
   try {
     switch ( imageType ) {
@@ -45,6 +44,11 @@ QByteArray WallpaperGenerator::getWallpaper()
     case 6:
       generate_squiggles( imageData ) ;
       break;
+
+    case 7:
+      generate_stripes( imageData ) ;
+      break;
+
     }
   } catch ( const std::exception& e ) {
     qWarning() << Q_FUNC_INFO << e.what();
@@ -88,6 +92,13 @@ void WallpaperGenerator::generate_squiggles( ImageData& imageData )
 
   paint_squiggles( imageData, 5, IMAGE_SIZE, random_symmmetryGroup(), alpha, exponent, thickness, sharpness );
 }
+
+void WallpaperGenerator::generate_stripes( ImageData& imageData )
+{
+  qInfo() << Q_FUNC_INFO ;
+  paint_stripes( imageData, IMAGE_SIZE, random_symmmetryGroup(), random_real_range_inclusive( 0.75, 1.75 ) );
+}
+
 void WallpaperGenerator::generate_clouds( ImageData& imageData )
 {
   qInfo() << Q_FUNC_INFO ;

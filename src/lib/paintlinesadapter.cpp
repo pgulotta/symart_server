@@ -40,7 +40,6 @@ const std::vector<QString>& paintlinesRuleNames()
     }
   }
 
-  qInfo() << "Q_FUNC_INFO" << " size =  " << ruleNames.size();
   return ruleNames ;
 }
 

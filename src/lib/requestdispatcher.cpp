@@ -89,7 +89,7 @@ void RequestDispatcher::purgeOldImages()
 QByteArray RequestDispatcher::generateWallpaper()
 {
   WallpaperGenerator generator;
-  return generator.getWallpaper();
+  return generator.getWallpaper( getImageData( "wallpaper" ) );
 }
 
 QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )
