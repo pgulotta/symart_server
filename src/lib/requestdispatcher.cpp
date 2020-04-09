@@ -24,8 +24,8 @@ using uniq_lck = std::unique_lock<std::shared_mutex>;
 ImageData emptyImageData;
 QImage emptyImage;
 
-//const qint64  PurgeImagesTimerIntervalMs {900000};  // 15 Minutes =900,000 Milliseconds
-const qint64  PurgeImagesTimerIntervalMs   {60000};  // 1 Minute
+const qint64  PurgeImagesTimerIntervalMs {900000};  // 15 Minutes =900,000 Milliseconds
+//const qint64  PurgeImagesTimerIntervalMs {60000};  // 1 Minute
 
 RequestDispatcher::RequestDispatcher( ) :
   mPurgeImagesHandler{new PurgeImagesHandler}
@@ -57,43 +57,48 @@ void RequestDispatcher::setImageData( const QString& id, ImageData& imageData )
   }
 }
 
-int RequestDispatcher::purgeOldImageMetaData( const qint64& agedTimeMSecsSinceEpoch )
+std::tuple<int, int> RequestDispatcher::purgeOldImageMetaData( const qint64& agedTimeMSecsSinceEpoch )
 {
-  int  removedCounter{0};
+  int  totalCount{0};
+  int  removedCount{0};
   uniq_lck l {shared_mut, std::defer_lock};
 
   if ( l.try_lock() ) {
+    totalCount = mImageDataById.size();
+
     for ( const auto&[key, value] : mImageDataById ) {
       const qint64& lastTouched = value.lastTouched;
 
       if ( agedTimeMSecsSinceEpoch > lastTouched ) {
         mImageDataById.erase( key );
-        removedCounter++;
+        removedCount++;
       }
     }
   }
 
-  return removedCounter;
+  return  std::make_tuple( removedCount, totalCount );;
 }
 
-int RequestDispatcher::purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch )
+std::tuple < int, int >RequestDispatcher::purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch )
 {
-  int  removedCounter{0};
+  int  totalCount{0};
+  int  removedCount{0};
   uniq_lck l {shared_mut, std::defer_lock};
 
   if ( l.try_lock() ) {
+    totalCount = mColorsImagesById.size();
 
     for ( const auto&[key, value] : mColorsImagesById ) {
       const qint64 lastTouched = value.lastTouched;
 
       if ( agedTimeMSecsSinceEpoch > lastTouched ) {
         mColorsImagesById.erase( key );
-        removedCounter++;
+        removedCount++;
       }
     }
   }
 
-  return removedCounter;
+  return  std::make_tuple( removedCount, totalCount );;
 }
 
 QString RequestDispatcher::now()
@@ -105,12 +110,14 @@ void RequestDispatcher::purgeOldImages()
 {
   auto agedTimeMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
   QThread::msleep( PurgeImagesTimerIntervalMs );
-  int purgedOldImageMetaDatas = purgeOldImageMetaData( agedTimeMSecsSinceEpoch );
-  int purgedOldColorsImages = purgeOldColorsImages( agedTimeMSecsSinceEpoch );
+
+  auto [ removedMetaData, totalMetaDataCount]  = purgeOldImageMetaData( agedTimeMSecsSinceEpoch );
+
+  auto [ removedImagesCount, totalImagesCount ]  = purgeOldColorsImages( agedTimeMSecsSinceEpoch );
 
   qInfo() << Q_FUNC_INFO << now() <<
-          "  Purged old ImageMetaData count = " << purgedOldImageMetaDatas <<
-          "  Purged old Colors Images count = " << purgedOldColorsImages;
+          "  Purged: Image MetaData = " << removedMetaData << "/" << totalMetaDataCount <<
+          ", Colors Images = " << removedImagesCount << "/" << totalImagesCount;
 }
 
 QByteArray RequestDispatcher::generateWallpaper()

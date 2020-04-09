@@ -3,7 +3,7 @@
 #include "imagedata.hpp"
 #include "purgeimageshandler.hpp"
 #include <map>
-
+#include <tuple>
 
 
 class QByteArray;
@@ -103,8 +103,8 @@ public:
 private:
   ImageData& getImageData( const QString& id );
   void setImageData( const QString& id, ImageData& imageData );
-  int purgeOldImageMetaData( const qint64& agedTimeMSecsSinceEpoch );
-  int purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch );
+  std::tuple < int, int >purgeOldImageMetaData( const qint64& agedTimeMSecsSinceEpoch );
+  std::tuple < int, int >purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch );
   std::map<QString, ImageMetaData> mImageDataById;
   std::map<QString, ColorsImage> mColorsImagesById;
   std::unique_ptr<PurgeImagesHandler> mPurgeImagesHandler;
