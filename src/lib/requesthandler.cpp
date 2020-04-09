@@ -1,6 +1,7 @@
 #include "requesthandler.hpp"
 #include "symart_service.hpp"
 #include "randgen.hpp"
+#include "requestdispatcher.hpp"
 #include <QDebug>
 #include <QImage>
 #include <QStringList>
@@ -22,7 +23,7 @@ class SymArtEndpoint
 {
 public :
   explicit SymArtEndpoint( Pistache::Address addr )
-    : httpEndpoint( std::make_shared<Pistache::Http::Endpoint>( addr ) )
+    : httpEndpoint( std::make_unique<Pistache::Http::Endpoint>( addr ) )
   {
     initDrawingTestFuncs();
     initDrawingGetFuncs();
@@ -165,9 +166,9 @@ private:
   {
     QByteArray bytes{"Available test API:\n"};
 
-    for ( auto item : drawingTestFuncs ) {
+    for ( const auto&[key, value] : drawingTestFuncs ) {
       bytes.append( "\n/test?" );
-      bytes.append( item.first.c_str() );
+      bytes.append( key.c_str() );
     }
 
     auto stream = response.stream( Pistache::Http::Code::Ok );
@@ -333,7 +334,7 @@ private:
 
 
 private:
-  std::shared_ptr< Pistache::Http::Endpoint> httpEndpoint;
+  std::unique_ptr< Pistache::Http::Endpoint> httpEndpoint;
   Pistache::Rest::Router router;
   std::map<std::string, drawingTestFunc> drawingTestFuncs;
   std::map<QString, drawingGenerateFunc> drawingGetFuncs;
@@ -345,8 +346,8 @@ RequestHandler::RequestHandler( int  port )
 {
   unsigned int nthreads = std::thread::hardware_concurrency();
   Pistache::Address addr( Pistache::Ipv4::any(), static_cast<uint16_t>( port )  );
-  std::cout << "Using " << nthreads << " threads" << std::endl;
-  std::cout << "Connection IP is " << addr.host() << " and port is " << port   << std::endl;
+  std::cout << RequestDispatcher::now().toStdString() << "  Using " << nthreads << " threads; " ;
+  std::cout << "with connection IP is " << addr.host() << " and port is " << port  << std::endl << std::endl;
 
   SymArtEndpoint endpoint( addr );
   endpoint.init( nthreads );

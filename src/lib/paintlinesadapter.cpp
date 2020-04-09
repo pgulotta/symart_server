@@ -35,14 +35,13 @@ static std::vector<QString> ruleNames;
 const std::vector<QString>& paintlinesRuleNames()
 {
   if ( ruleNames.empty() ) {
-    for ( const auto& item : paintlinesFuncs ) {
-      ruleNames.push_back( item.first );
+    for ( const auto&[key, value] : paintlinesFuncs ) {
+      ruleNames.push_back( key );
     }
   }
 
   return ruleNames ;
 }
-
 
 const paintfunc& paintlinesFunction( const QString& name )
 {

@@ -3,15 +3,13 @@
 
 /*  Examples
 
-http://65.60.187.8:60564/ready
-http://65.60.187.8:60564/test?trap
-http://65.60.187.8:60564/test?walk
-http://65.60.187.8:60564/test?walk2
-http://65.60.187.8:60564/test?squiggles
-http://65.60.187.8:60564/test?hyperbolicLines
-
-http://65.60.187.8:60564/test?quasiTrap
-
+http://localhost:60566/ready
+http://localhost:60566/test?trap
+http://loclahost:60566/test?walk
+http://localhost:60566/test?walk2
+http://localhost:60566/test?squiggles
+http://localhost:60564/test?hyperbolicLines
+http://localhost:60564/test?quasiTrap
 http://localhost:60566/wallpaper
 
 */

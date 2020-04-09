@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "imagedata.hpp"
-#include "purgeoldimageshandler.hpp"
+#include "purgeimageshandler.hpp"
 #include <map>
 
 
@@ -17,6 +17,8 @@ class RequestDispatcher
 {
 public:
   RequestDispatcher( );
+
+  static QString now();
 
   void purgeOldImages();
 
@@ -105,7 +107,7 @@ private:
   int purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch );
   std::map<QString, ImageMetaData> mImageDataById;
   std::map<QString, ColorsImage> mColorsImagesById;
-  std::shared_ptr<PurgeOldImagesHandler> mPurgeOldImagesHandler;
+  std::unique_ptr<PurgeImagesHandler> mPurgeImagesHandler;
 
 };
 

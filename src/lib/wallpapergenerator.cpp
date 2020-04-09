@@ -14,10 +14,9 @@ static const int IMAGE_SIZE = 512;
 
 QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
 {
-  int imageType =  random_range_inclusive( 0, 8 );
 
   try {
-    switch ( imageType ) {
+    switch ( auto imageType = random_range_inclusive( 0, 8 ); imageType ) {
     case 0:
       generate_clouds( imageData );
       break;
@@ -147,7 +146,7 @@ void WallpaperGenerator::generate_lines( ImageData& imageData )
   QString rule3 { ruleNames.at( random_range_inclusive( 0, ruleNamesMax ) ) };
   int weight3 {random_range_inclusive( 1, 5 ) };
   bool isPastel3{random_bool()};
-  paint_lines( imageData, IMAGE_SIZE, random_symmmetryGroup(), 3,
+  paint_lines( imageData, IMAGE_SIZE, random_symmmetryGroup(), 15,
                rule1, weight1, isPastel1, rule2, weight2, isPastel2, rule3, weight3, isPastel3 );
 }
 
