@@ -103,7 +103,7 @@ public:
 private:
   ImageData& getImageData( const QString& id );
   void setImageData( const QString& id, ImageData& imageData );
-  int purgeOldImageMetaDatas( const qint64& agedTimeMSecsSinceEpoch );
+  int purgeOldImageMetaData( const qint64& agedTimeMSecsSinceEpoch );
   int purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch );
   std::map<QString, ImageMetaData> mImageDataById;
   std::map<QString, ColorsImage> mColorsImagesById;

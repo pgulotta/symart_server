@@ -13,14 +13,19 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QThreadPool>
-#include <mutex>
+#include <shared_mutex>
 #include <thread>
 
 
-std::mutex mImageDataByIdMutex;
+std::shared_mutex shared_mut;
+using shrd_lck = std::shared_lock<std::shared_mutex>;
+using uniq_lck = std::unique_lock<std::shared_mutex>;
+
+ImageData emptyImageData;
+QImage emptyImage;
 
 //const qint64  PurgeImagesTimerIntervalMs {900000};  // 15 Minutes =900,000 Milliseconds
-const qint64  PurgeImagesTimerIntervalMs   {120000};  // 2 Minute
+const qint64  PurgeImagesTimerIntervalMs   {60000};  // 1 Minute
 
 RequestDispatcher::RequestDispatcher( ) :
   mPurgeImagesHandler{new PurgeImagesHandler}
@@ -31,30 +36,40 @@ RequestDispatcher::RequestDispatcher( ) :
 
 ImageData& RequestDispatcher::getImageData( const QString& id )
 {
-  std::lock_guard<std::mutex> lock {mImageDataByIdMutex};
-  ImageMetaData& data = mImageDataById[id];
-  data.lastTouched = QDateTime::currentMSecsSinceEpoch();
-  return data.imageData;
+  uniq_lck l {shared_mut, std::defer_lock};
+
+  if ( l.try_lock() ) {
+    ImageMetaData& data = mImageDataById[id];
+    data.lastTouched = QDateTime::currentMSecsSinceEpoch();
+    return data.imageData;
+  } else {
+    return emptyImageData;
+  }
 }
 
 void RequestDispatcher::setImageData( const QString& id, ImageData& imageData )
 {
-  std::lock_guard<std::mutex> lock {mImageDataByIdMutex};
-  mImageDataById[id].imageData = imageData;
-  mImageDataById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
+  uniq_lck l {shared_mut, std::defer_lock};
+
+  if ( l.try_lock() ) {
+    mImageDataById[id].imageData = imageData;
+    mImageDataById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
+  }
 }
 
-int RequestDispatcher::purgeOldImageMetaDatas( const qint64& agedTimeMSecsSinceEpoch )
+int RequestDispatcher::purgeOldImageMetaData( const qint64& agedTimeMSecsSinceEpoch )
 {
   int  removedCounter{0};
-  std::lock_guard<std::mutex> lock {mImageDataByIdMutex};
+  uniq_lck l {shared_mut, std::defer_lock};
 
-  for ( const auto&[key, value] : mImageDataById ) {
-    const qint64& lastTouched = value.lastTouched;
+  if ( l.try_lock() ) {
+    for ( const auto&[key, value] : mImageDataById ) {
+      const qint64& lastTouched = value.lastTouched;
 
-    if ( agedTimeMSecsSinceEpoch > lastTouched ) {
-      mImageDataById.erase( key );
-      removedCounter++;
+      if ( agedTimeMSecsSinceEpoch > lastTouched ) {
+        mImageDataById.erase( key );
+        removedCounter++;
+      }
     }
   }
 
@@ -64,14 +79,17 @@ int RequestDispatcher::purgeOldImageMetaDatas( const qint64& agedTimeMSecsSinceE
 int RequestDispatcher::purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch )
 {
   int  removedCounter{0};
-  std::lock_guard<std::mutex> lock {mImageDataByIdMutex};
+  uniq_lck l {shared_mut, std::defer_lock};
 
-  for ( const auto&[key, value] : mColorsImagesById ) {
-    const qint64 lastTouched = value.lastTouched;
+  if ( l.try_lock() ) {
 
-    if ( agedTimeMSecsSinceEpoch > lastTouched ) {
-      mColorsImagesById.erase( key );
-      removedCounter++;
+    for ( const auto&[key, value] : mColorsImagesById ) {
+      const qint64 lastTouched = value.lastTouched;
+
+      if ( agedTimeMSecsSinceEpoch > lastTouched ) {
+        mColorsImagesById.erase( key );
+        removedCounter++;
+      }
     }
   }
 
@@ -87,7 +105,7 @@ void RequestDispatcher::purgeOldImages()
 {
   auto agedTimeMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
   QThread::msleep( PurgeImagesTimerIntervalMs );
-  int purgedOldImageMetaDatas = purgeOldImageMetaDatas( agedTimeMSecsSinceEpoch );
+  int purgedOldImageMetaDatas = purgeOldImageMetaData( agedTimeMSecsSinceEpoch );
   int purgedOldColorsImages = purgeOldColorsImages( agedTimeMSecsSinceEpoch );
 
   qInfo() << Q_FUNC_INFO << now() <<
@@ -154,17 +172,26 @@ QByteArray RequestDispatcher::makeHyperbolic( const QString& id, int size,  int 
 void RequestDispatcher::loadColorsImage( const QString& id, const QByteArray& byteArray )
 {
   qDebug() << Q_FUNC_INFO << "byteArray.size()  =  " << byteArray.size();
-  std::lock_guard<std::mutex> lock {mImageDataByIdMutex};
-  mColorsImagesById[id].image = fromByteArray( byteArray )  ;
-  mColorsImagesById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
+  uniq_lck l {shared_mut, std::defer_lock};
+
+  if ( l.try_lock() ) {
+    mColorsImagesById[id].image = fromByteArray( byteArray )  ;
+    mColorsImagesById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
+  }
+
   qDebug() << Q_FUNC_INFO << " mColorsImage.isNull()=" << mColorsImagesById[id].image.isNull();
 }
 
 QImage RequestDispatcher::getColorsImage( const QString& id )
 {
-  std::lock_guard<std::mutex> lock {mImageDataByIdMutex};
-  mColorsImagesById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
-  return  mColorsImagesById[id].image;
+  uniq_lck l {shared_mut, std::defer_lock};
+
+  if ( l.try_lock() ) {
+    mColorsImagesById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
+    return  mColorsImagesById[id].image;
+  } else {
+    return emptyImage;
+  }
 }
 
 bool RequestDispatcher::canTileImage( const QString& id )

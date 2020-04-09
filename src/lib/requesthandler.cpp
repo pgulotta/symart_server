@@ -146,19 +146,19 @@ public :
   {
     // example:  http://localhost:60564/test?quasiPeriodicStripes
     drawingTestFuncs.clear();
-    drawingTestFuncs.emplace( "clouds", []() { return paintClouds( "test",  512, random_symmmetryGroup(), 111, 123, 150, 90, 190, 200, 55, 178, 222, 1 );} );
-    drawingTestFuncs.emplace( "clusters",  []() { return paintClusters( "test", 400, 3, 1.50 );} );
-    drawingTestFuncs.emplace( "hyperbolicClouds",  []() { return paintHyperbolicClouds( "test",  256, 2, 3, 2, 2, 2, 1, 111, 123, 150, 90, 190, 200, 55, 178, 222, 1 );} );
-    drawingTestFuncs.emplace( "hyperbolicLines", []() { return paintHyperbolicLines( "test",  400, 2, 3, 2, 2, 2, 1, 1, 1.0, 1.50,  11 );} );
-    drawingTestFuncs.emplace( "lines", []() { return paintLines( "test", 512, random_symmmetryGroup(), 20, "Line", 2, true, "Flower", 4, true, "Beads", 6, true  );} );
-    drawingTestFuncs.emplace( "quasiPeriodicStripes",  []() { return paintQuasiperiodicStripes( "test", 1000, 20, 1.5 );} );
-    drawingTestFuncs.emplace( "quasiTrap", []() { return drawQuasiTrap( "test", 55, 178, 222, 768, 768, 8,  66.6 );} );
-    drawingTestFuncs.emplace( "quasiTrapPoly", []() { return drawQuasiTrapPoly( "test", 55, 178, 222, 512, 512, 7,  44.4 );} );
-    drawingTestFuncs.emplace( "squiggles",  []() { return paintSquiggles( "test", 15, 1024, 10, 1.3, 1.50, 1.3, 1.5 );} );
-    drawingTestFuncs.emplace( "stripes",  []() { return paintStripes( "test", 1024, 5, .50 );} );
-    drawingTestFuncs.emplace( "trap", []() { return drawTrap( "test", 32, 74, 135, 144, 8 );} );
-    drawingTestFuncs.emplace( "walk", []() { return drawWalk( "test", 512, 768, true, 0 );} );
-    drawingTestFuncs.emplace( "walk2", []() { return drawWalk( "test", 1000, 512, false, 1 );} );
+    drawingTestFuncs.emplace( "clouds", []() { return paintClouds( "test_clouds",  512, random_symmmetryGroup(), 111, 123, 150, 90, 190, 200, 55, 178, 222, 1 );} );
+    drawingTestFuncs.emplace( "clusters",  []() { return paintClusters( "test_clusters", 400, 3, 1.50 );} );
+    drawingTestFuncs.emplace( "hyperbolicClouds",  []() { return paintHyperbolicClouds( "test_hyperbolicClouds",  512, 2, 3, 2, 2, 2, 1, 111, 123, 150, 90, 190, 200, 55, 178, 222, 1 );} );
+    drawingTestFuncs.emplace( "hyperbolicLines", []() { return paintHyperbolicLines( "test_hyperbolicLines",  512, 2, 3, 2, 2, 2, 1, 1, 1.0, 1.50,  11 );} );
+    drawingTestFuncs.emplace( "lines", []() { return paintLines( "test_lines", 512, random_symmmetryGroup(), 20, "Line", 2, true, "Flower", 4, true, "Beads", 6, true  );} );
+    drawingTestFuncs.emplace( "quasiPeriodicStripes",  []() { return paintQuasiperiodicStripes( "test_quasiPeriodicStripes", 1024, 20, 1.5 );} );
+    drawingTestFuncs.emplace( "quasiTrap", []() { return drawQuasiTrap( "test_quasiTrap", 55, 178, 222, 768, 768, 8,  66.6 );} );
+    drawingTestFuncs.emplace( "quasiTrapPoly", []() { return drawQuasiTrapPoly( "test_quasiTrapPoly", 55, 178, 222, 512, 512, 7,  44.4 );} );
+    drawingTestFuncs.emplace( "squiggles",  []() { return paintSquiggles( "test_squiggles", 15, 1024, 10, 1.3, 1.50, 1.3, 1.5 );} );
+    drawingTestFuncs.emplace( "stripes",  []() { return paintStripes( "test_stripes", 1024, 5, .50 );} );
+    drawingTestFuncs.emplace( "trap", []() { return drawTrap( "test_trap", 32, 74, 135, 600, 8 );} );
+    drawingTestFuncs.emplace( "walk", []() { return drawWalk( "test_walk", 512, 768, true, 0 );} );
+    drawingTestFuncs.emplace( "walk2", []() { return drawWalk( "test_walk2", 1024, 512, false, 1 );} );
   }
 
 private:
