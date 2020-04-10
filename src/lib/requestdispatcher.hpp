@@ -101,8 +101,8 @@ public:
 
 
 private:
-  ImageData& getImageData( const QString& id );
-  void setImageData( const QString& id, ImageData& imageData );
+  ImageData& getNewImageData( const QString& id );
+  ImageData& getOldImageData( const QString& id );
   std::tuple < int, int >purgeOldImageMetaData( const qint64& agedTimeMSecsSinceEpoch );
   std::tuple < int, int >purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch );
   std::map<QString, ImageMetaData> mImageDataById;

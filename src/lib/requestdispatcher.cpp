@@ -20,8 +20,7 @@
 std::shared_mutex shared_mut;
 using shrd_lck = std::shared_lock<std::shared_mutex>;
 using uniq_lck = std::unique_lock<std::shared_mutex>;
-
-ImageData emptyImageData;
+ImageMetaData emptyImageMetaData;
 QImage emptyImage;
 
 const qint64  PurgeImagesTimerIntervalMs {900000};  // 15 Minutes =900,000 Milliseconds
@@ -34,26 +33,54 @@ RequestDispatcher::RequestDispatcher( ) :
   QThreadPool::globalInstance()->start( mPurgeImagesHandler.get() );
 }
 
-ImageData& RequestDispatcher::getImageData( const QString& id )
+
+ImageData& RequestDispatcher::getOldImageData( const QString& id )
 {
   uniq_lck l {shared_mut, std::defer_lock};
 
   if ( l.try_lock() ) {
-    ImageMetaData& data = mImageDataById[id];
-    data.lastTouched = QDateTime::currentMSecsSinceEpoch();
-    return data.imageData;
+    auto it = mImageDataById.find( id );
+
+    if ( it != mImageDataById.end() ) {
+      return mImageDataById[id].imageData;
+    }
+  }
+
+  return emptyImageMetaData.imageData;
+
+}
+
+ImageData& RequestDispatcher::getNewImageData( const QString& id )
+{
+  uniq_lck l {shared_mut, std::defer_lock};
+
+  if ( l.try_lock() ) {
+    auto it = mImageDataById.find( id );
+
+    if ( it != mImageDataById.end() ) {
+      it->second.imageData.layers.reset();
+      it->second.imageData.layers = nullptr;
+      mImageDataById.erase( it );
+    }
+
+    mImageDataById.try_emplace( id, ImageMetaData{ImageData{}, QDateTime::currentMSecsSinceEpoch() } );
+    return mImageDataById[id].imageData;
   } else {
-    return emptyImageData;
+    return emptyImageMetaData.imageData;
   }
 }
 
-void RequestDispatcher::setImageData( const QString& id, ImageData& imageData )
+QImage RequestDispatcher::getColorsImage( const QString& id )
 {
   uniq_lck l {shared_mut, std::defer_lock};
 
   if ( l.try_lock() ) {
-    mImageDataById[id].imageData = imageData;
-    mImageDataById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
+    mColorsImagesById.try_emplace( id, ColorsImage{} );
+    ColorsImage& colorsImage{mColorsImagesById.at( id )};
+    colorsImage.lastTouched = QDateTime::currentMSecsSinceEpoch();
+    return colorsImage.image;
+  } else {
+    return emptyImage;
   }
 }
 
@@ -66,10 +93,12 @@ std::tuple<int, int> RequestDispatcher::purgeOldImageMetaData( const qint64& age
   if ( l.try_lock() ) {
     totalCount = mImageDataById.size();
 
-    for ( const auto&[key, value] : mImageDataById ) {
+    for (  auto&[key, value] : mImageDataById ) {
       const qint64& lastTouched = value.lastTouched;
 
       if ( agedTimeMSecsSinceEpoch > lastTouched ) {
+        value.imageData.layers.reset();
+        value.imageData.layers = nullptr;
         mImageDataById.erase( key );
         removedCount++;
       }
@@ -123,12 +152,12 @@ void RequestDispatcher::purgeOldImages()
 QByteArray RequestDispatcher::generateWallpaper()
 {
   WallpaperGenerator generator;
-  return generator.getWallpaper( getImageData( "wallpaper" ) );
+  return generator.getWallpaper( getNewImageData( "wallpaper" ) );
 }
 
 QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )
 {
-  auto imageData { getImageData( id )};
+  auto imageData { getOldImageData( id )};
 
   if ( imageData.img.data == nullptr )
     return {QByteArray()};
@@ -138,7 +167,7 @@ QByteArray RequestDispatcher::lastGeneratedImage( const QString& id )
 
 QByteArray RequestDispatcher::hexagonalStretch( const QString& id )
 {
-  auto imageData { getImageData( id )};
+  auto imageData { getOldImageData( id )};
 
   if ( imageData.img.data == nullptr )
     return {QByteArray()};
@@ -152,7 +181,7 @@ QByteArray RequestDispatcher::hexagonalStretch( const QString& id )
 
 QByteArray RequestDispatcher::randomizeTiles( const QString& id, int xtiles, int ytiles )
 {
-  auto imageData { getImageData( id )};
+  auto imageData { getOldImageData( id )};
 
   if ( imageData.img.data == nullptr )
     return {QByteArray()};
@@ -166,14 +195,14 @@ QByteArray RequestDispatcher::randomizeTiles( const QString& id, int xtiles, int
 
 QByteArray RequestDispatcher::makeHyperbolic( const QString& id, int size,  int projType )
 {
-  auto newImageData =   getImageData( id );
+  auto imageData { getOldImageData( id )};
 
-  if ( newImageData.img.data == nullptr )
+  if ( imageData.img.data == nullptr )
     return {QByteArray()};
 
-  make_hyperbolic( newImageData, projType, size );
+  make_hyperbolic( imageData, projType, size );
 
-  return toByteArray( QImage{makeImage( newImageData.img )} );
+  return toByteArray( QImage{makeImage( imageData.img )} );
 }
 
 void RequestDispatcher::loadColorsImage( const QString& id, const QByteArray& byteArray )
@@ -189,21 +218,9 @@ void RequestDispatcher::loadColorsImage( const QString& id, const QByteArray& by
   qDebug() << Q_FUNC_INFO << " mColorsImage.isNull()=" << mColorsImagesById[id].image.isNull();
 }
 
-QImage RequestDispatcher::getColorsImage( const QString& id )
-{
-  uniq_lck l {shared_mut, std::defer_lock};
-
-  if ( l.try_lock() ) {
-    mColorsImagesById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
-    return  mColorsImagesById[id].image;
-  } else {
-    return emptyImage;
-  }
-}
-
 bool RequestDispatcher::canTileImage( const QString& id )
 {
-  auto imageData { getImageData( id )};
+  auto imageData { getOldImageData( id )};
 
   if ( imageData.img.data == nullptr  ) {
     return false;
@@ -215,7 +232,7 @@ bool RequestDispatcher::canTileImage( const QString& id )
 
 bool RequestDispatcher::isSymmetricView( const QString& id )
 {
-  auto imageData { getImageData( id )};
+  auto imageData { getOldImageData( id )};
 
   if ( imageData.img.data == nullptr  ) {
     return false;
@@ -228,8 +245,9 @@ QByteArray RequestDispatcher::paintSquiggles( const QString& id, int ncolors, in
                                               double exponent, double thickness,
                                               double sharpness )
 {
-  paint_squiggles( getImageData( id ),  ncolors,  size,  symGroup,  alpha,  exponent,  thickness,  sharpness );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto& imageData { getNewImageData( id )};
+  paint_squiggles( imageData,  ncolors,  size,  symGroup,  alpha,  exponent,  thickness,  sharpness );
+  return toByteArray( QImage{makeImage( imageData.img )} );
 }
 
 QByteArray RequestDispatcher::paintSquiggles( const QString& id,
@@ -237,14 +255,15 @@ QByteArray RequestDispatcher::paintSquiggles( const QString& id,
                                               bool useLightness, int ncolors, int size, int symGroup, double alpha, double exponent,
                                               double thickness, double sharpness )
 {
-  paint_squiggles( getImageData( id ), saturationBoost, useHue, useSaturation, useLightness, ncolors,
+  auto& imageData { getNewImageData( id )};
+  paint_squiggles( imageData, saturationBoost, useHue, useSaturation, useLightness, ncolors,
                    size, symGroup,  alpha,  exponent,  thickness,  sharpness, getColorsImage( id ) );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  return toByteArray( QImage{makeImage( imageData.img )} );
 }
 
 QByteArray RequestDispatcher::updateSquiggles( const QString& id, int size, int symGroup )
 {
-  ImageData& data{getImageData( id )};
+  auto& data{getNewImageData( id )};
   update_squiggles( data, size,  symGroup );
   return toByteArray( QImage{makeImage( data.img )} );
 }
@@ -253,9 +272,10 @@ QByteArray RequestDispatcher::paintClouds( const QString& id, int size, int symm
                                            int col1Blue, int col2Red, int col2Green, int col2Blue, int col3Red, int col3Green, int col3Blue,
                                            int distributionIndex )
 {
-  paint_clouds( getImageData( id ), size, symmmetryGroup, col1Red, col1Green, col1Blue,  col2Red,
+  auto& data{getNewImageData( id )};
+  paint_clouds( data, size, symmmetryGroup, col1Red, col1Green, col1Blue,  col2Red,
                 col2Green, col2Blue, col3Red,  col3Green, col3Blue, distributionIndex );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::paintHyperbolicClouds( const QString& id, int size, int fdfIndex, int rotation0,
@@ -263,10 +283,11 @@ QByteArray RequestDispatcher::paintHyperbolicClouds( const QString& id, int size
                                                      int rotation3, int projType, int col1Red, int col1Green, int col1Blue, int col2Red, int col2Green, int col2Blue,
                                                      int col3Red, int col3Green, int col3Blue, int distributionIndex )
 {
-  paint_hyperbolic_clouds( getImageData( id ),  size,  fdfIndex,  rotation0,  rotation1,  rotation2,
+  auto& data{getNewImageData( id )};
+  paint_hyperbolic_clouds( data,  size,  fdfIndex,  rotation0,  rotation1,  rotation2,
                            rotation3,  projType,  col1Red,  col1Green,  col1Blue,  col2Red,  col2Green, col2Blue,
                            col3Red,  col3Green,  col3Blue,  distributionIndex );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::paintLines( const QString& id, int size, int symmmetryGroup, int ncolors,
@@ -274,11 +295,11 @@ QByteArray RequestDispatcher::paintLines( const QString& id, int size, int symmm
                                           const QString& ruleTName, int weight2, bool isPastel2,
                                           const QString& ruleName3, int weight3, bool isPastel3 )
 {
-  paint_lines( getImageData( id ),  size, symmmetryGroup, ncolors, ruleName1, weight1, isPastel1,
+  auto& data{getNewImageData( id )};
+  paint_lines( data,  size, symmmetryGroup, ncolors, ruleName1, weight1, isPastel1,
                ruleTName, weight2, isPastel2, ruleName3, weight3, isPastel3 );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
-
 
 QByteArray RequestDispatcher::paintLines( const QString& id, const QString& colorImagePath,  double saturationBoost,
                                           bool useHue, bool useSaturation, bool useLightness,
@@ -287,35 +308,40 @@ QByteArray RequestDispatcher::paintLines( const QString& id, const QString& colo
                                           const QString& ruleTName, int weight2, bool isPastel2,
                                           const QString& ruleName3, int weight3, bool isPastel3 )
 {
-  paint_lines( getImageData( id ), colorImagePath,   saturationBoost, useHue,  useSaturation,  useLightness,
+  auto& data{getNewImageData( id )};
+  paint_lines( data, colorImagePath,   saturationBoost, useHue,  useSaturation,  useLightness,
                size,  symmmetryGroup,  ncolors, ruleName1, weight1, isPastel1,
                ruleTName, weight2, isPastel2, ruleName3, weight3, isPastel3 );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::paintStripes( const QString& id,  int sz, int symGroup, double alpha )
 {
-  paint_stripes( getImageData( id ),  sz, symGroup, alpha );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto& data{getNewImageData( id )};
+  paint_stripes( data,  sz, symGroup, alpha );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 
 QByteArray RequestDispatcher::paintClusters( const QString& id, int sz, int symGroup, double alpha )
 {
-  paint_clusters( getImageData( id ),  sz, symGroup, alpha );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto& data{getNewImageData( id )};
+  paint_clusters( data,  sz, symGroup, alpha );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::drawWalk( const QString& id, int width, int height, bool balanced, int walkFill )
 {
-  draw_walk( getImageData( id ), width, height, balanced, walkFill );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto& data{getNewImageData( id )};
+  draw_walk( data, width, height, balanced, walkFill );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::drawWalk2( const QString& id, int width, int height, bool balanced, int walkFill )
 {
-  draw_walk2( getImageData( id ), width, height, balanced, walkFill );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto& data{getNewImageData( id )};
+  draw_walk2( data, width, height, balanced, walkFill );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::paintHyperbolicLines( const QString& id, int size, int fdfIndex, int rotation0,
@@ -323,35 +349,40 @@ QByteArray RequestDispatcher::paintHyperbolicLines( const QString& id, int size,
                                                     int rotation2,
                                                     int rotation3, int projType, int flipType, float thickness, float sharpness, int ncolors )
 {
-  paint_hyperbolic_lines( getImageData( id ), size,  fdfIndex,  rotation0,  rotation1,  rotation2,
+  auto& data{getNewImageData( id )};
+  paint_hyperbolic_lines( data, size,  fdfIndex,  rotation0,  rotation1,  rotation2,
                           rotation3,  projType,  flipType,  thickness,  sharpness,  ncolors );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::drawTrap( const QString& id, int colRed, int colGreen, int colBlue, int sz, int symGroup )
 {
-  drawtrap( getImageData( id ), colRed, colGreen, colBlue, sz,  symGroup );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto& data{getNewImageData( id )};
+  drawtrap( data, colRed, colGreen, colBlue, sz,  symGroup );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::drawQuasiTrap( const QString& id, int colRed, int colGreen, int colBlue, int width,
                                              int height, int symmetry, double quasiperiod )
 {
-  drawquasitrap( getImageData( id ), colRed, colGreen, colBlue, width,  height,  symmetry,  quasiperiod );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto& data{getNewImageData( id )};
+  drawquasitrap( data, colRed, colGreen, colBlue, width,  height,  symmetry,  quasiperiod );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::drawQuasiTrapPoly( const QString& id, int col1Red, int col1Green, int col1Blue,
                                                  int width, int height, int symmetry, double quasiperiod )
 {
-  drawquasitrap_poly( getImageData( id ), col1Red,  col1Green,  col1Blue, width,  height,  symmetry,  quasiperiod );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto& data{getNewImageData( id )};
+  drawquasitrap_poly( data, col1Red,  col1Green,  col1Blue, width,  height,  symmetry,  quasiperiod );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::paintQuasiperiodicStripes( const QString& id, int size, int fftsize, double alpha )
 {
-  paint_quasiperiodic_stripes( getImageData( id ),  size,  fftsize,  alpha );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto& data{getNewImageData( id )};
+  paint_quasiperiodic_stripes( data,  size,  fftsize,  alpha );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::caGenerateImage( const QString& id, int width, int height, int ruleIndex, int left,
@@ -359,14 +390,16 @@ QByteArray RequestDispatcher::caGenerateImage( const QString& id, int width, int
                                                int bottom,
                                                int nturns, double intensity )
 {
-  ca_generate_image( getImageData( id ), width,  height,  ruleIndex,  left,  top,  right,  bottom, nturns,  intensity );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto& data{getNewImageData( id )};
+  ca_generate_image( data, width,  height,  ruleIndex,  left,  top,  right,  bottom, nturns,  intensity );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 QByteArray RequestDispatcher::caContinue( const QString& id, int nturns, double intensity )
 {
-  ca_continue( getImageData( id ), nturns,  intensity );
-  return toByteArray( QImage{makeImage( getImageData( id ).img )} );
+  auto& data{getNewImageData( id )};
+  ca_continue( data, nturns,  intensity );
+  return toByteArray( QImage{makeImage( data.img )} );
 }
 
 
