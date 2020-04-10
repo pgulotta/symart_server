@@ -9,7 +9,6 @@
 class QByteArray;
 class QImage;
 class QString;
-class ImageData;
 struct ImageMetaData;
 struct ColorsImage;
 
@@ -107,7 +106,7 @@ private:
   std::tuple < int, int >purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch );
   std::map<QString, ImageMetaData> mImageDataById;
   std::map<QString, ColorsImage> mColorsImagesById;
-  std::unique_ptr<PurgeImagesHandler> mPurgeImagesHandler;
+  std::unique_ptr<PurgeImagesHandler> mPurgeImagesHandler{new PurgeImagesHandler};
 
 };
 

@@ -5,7 +5,7 @@
 class QByteArray;
 class QString;
 class QImage;
-class ImageData;
+//class ImageData;
 
 const QString DefaultId{"defaultId"};
 

@@ -33,6 +33,7 @@ using std::fill;
 using std::function;
 using std::vector;
 
+QImage noImage;
 
 void generate( stripes_grid& grid, const std::function<complex<double>()>& gen,
                double exponent )
@@ -108,7 +109,8 @@ void  update_squiggles( ImageData& imageData, int size, int symGroup )
 void paint_squiggles( ImageData& imageData, int ncolors, int size, int symGroup, double alpha,
                       double exponent, double thickness, double sharpness )
 {
-  paint_squiggles( imageData,  0.0, 0, 0, 0,  ncolors, size, symGroup, alpha, exponent, thickness, sharpness, QImage{} );
+  paint_squiggles( imageData,  0.0, 0, 0, 0,  ncolors, size, symGroup, alpha, exponent, thickness, sharpness,
+                   noImage );
 
 }
 void  paint_squiggles( ImageData& imageData, double saturationBoost, bool useHue,
