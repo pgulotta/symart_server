@@ -1,4 +1,5 @@
 ﻿#include "wallpapergenerator.hpp"
+#include "requestdispatcher.hpp"
 #include "paintclouds.hpp"
 #include "randgen.hpp"
 #include "generators.hpp"
@@ -63,14 +64,14 @@ QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
 
 void WallpaperGenerator::generate_trap( ImageData& imageData )
 {
-  qInfo() << Q_FUNC_INFO ;
+  qInfo() << RequestDispatcher::now() << Q_FUNC_INFO ;
   color_t color{randomColor()};
   drawtrap( imageData, color.red, color.green, color.blue, IMAGE_SIZE, random_symmmetryGroup() );
 }
 
 void WallpaperGenerator::generate_quasitrap( ImageData& imageData )
 {
-  qInfo() << Q_FUNC_INFO ;
+  qInfo() << RequestDispatcher::now() << Q_FUNC_INFO ;
   color_t color{randomColor()};
   drawquasitrap( imageData, color.red, color.green, color.blue, IMAGE_SIZE, IMAGE_SIZE, random_range_inclusive( 0, 3 ),
                  random_real_range_inclusive( IMAGE_SIZE / 8, IMAGE_SIZE ) );
@@ -78,7 +79,7 @@ void WallpaperGenerator::generate_quasitrap( ImageData& imageData )
 
 void WallpaperGenerator::generate_quasitrap_poly( ImageData& imageData )
 {
-  qInfo() << Q_FUNC_INFO ;
+  qInfo() << RequestDispatcher::now() << Q_FUNC_INFO ;
   color_t color{randomColor()};
   drawquasitrap_poly( imageData, color.red, color.green, color.blue, IMAGE_SIZE, IMAGE_SIZE, random_range_inclusive( 0,
                       3 ), random_real_range_inclusive( IMAGE_SIZE / 8, IMAGE_SIZE ) );
@@ -86,7 +87,7 @@ void WallpaperGenerator::generate_quasitrap_poly( ImageData& imageData )
 
 void WallpaperGenerator::generate_squiggles( ImageData& imageData )
 {
-  qInfo() << Q_FUNC_INFO ;
+  qInfo() << RequestDispatcher::now() << Q_FUNC_INFO ;
   auto thickness{ random_real_range_inclusive( 0.1, 10.0 )};
   auto sharpness{ random_real_range_inclusive( 100.0, 1000.0 )};
   auto alpha{ random_real_range_inclusive( 0.75, 1.75 )};
@@ -96,13 +97,13 @@ void WallpaperGenerator::generate_squiggles( ImageData& imageData )
 
 void WallpaperGenerator::generate_stripes( ImageData& imageData )
 {
-  qInfo() << Q_FUNC_INFO ;
+  qInfo() << RequestDispatcher::now() << Q_FUNC_INFO ;
   paint_stripes( imageData, IMAGE_SIZE, random_symmmetryGroup(), random_real_range_inclusive( 0.75, 1.75 ) );
 }
 
 void WallpaperGenerator::generate_walk( ImageData& imageData )
 {
-  qInfo() << Q_FUNC_INFO ;
+  qInfo() << RequestDispatcher::now() << Q_FUNC_INFO ;
   int fill = random_bool() ? 0 : 1;
   bool isTileable = random_bool();
 
@@ -115,7 +116,7 @@ void WallpaperGenerator::generate_walk( ImageData& imageData )
 
 void WallpaperGenerator::generate_clouds( ImageData& imageData )
 {
-  qInfo() << Q_FUNC_INFO ;
+  qInfo() << RequestDispatcher::now() << Q_FUNC_INFO ;
   color_t color1{randomColor()};
   color_t color2{randomColor()};
   color_t color3{randomColor()};
@@ -128,25 +129,22 @@ void WallpaperGenerator::generate_clouds( ImageData& imageData )
 
 void WallpaperGenerator::generate_clusters( ImageData& imageData )
 {
-  qInfo() << Q_FUNC_INFO ;
+  qInfo() << RequestDispatcher::now() << Q_FUNC_INFO ;
   paint_clusters( imageData, IMAGE_SIZE, random_symmmetryGroup(), random_real_range_inclusive( 0.75, 1.75 ) );
 }
 
 void WallpaperGenerator::generate_lines( ImageData& imageData )
 {
-  qInfo() << Q_FUNC_INFO ;
+  qInfo() << RequestDispatcher::now() << Q_FUNC_INFO ;
   auto ruleNames{paintlinesRuleNames()};
   const auto ruleNamesMax{ ruleNames.size() - 1};
   QString rule1 { ruleNames.at( random_range_inclusive( 0, ruleNamesMax ) ) };
   int weight1 {random_range_inclusive( 1, 5 ) };
-  bool isPastel1{random_bool()};
   QString rule2 { ruleNames.at( random_range_inclusive( 0, ruleNamesMax ) ) };
   int weight2 {random_range_inclusive( 1, 5 ) };
-  bool isPastel2{random_bool()};
   QString rule3 { ruleNames.at( random_range_inclusive( 0, ruleNamesMax ) ) };
   int weight3 {random_range_inclusive( 1, 5 ) };
-  bool isPastel3{random_bool()};
-  paint_lines( imageData, IMAGE_SIZE, random_symmmetryGroup(), 15,
-               rule1, weight1, isPastel1, rule2, weight2, isPastel2, rule3, weight3, isPastel3 );
+  paint_lines( imageData, IMAGE_SIZE, random_symmmetryGroup(), 20,
+               rule1, weight1, true, rule2, weight2, true, rule3, weight3, true );
 }
 
