@@ -178,18 +178,6 @@ QByteArray RequestDispatcher::hexagonalStretch( const QString& id )
   return toByteArray( QImage{makeImage( newImageData.img )} );
 }
 
-//QByteArray RequestDispatcher::makeHyperbolic( const QString& id, int size,  int projType )
-//{
-//  auto& imageData { getOldImageData( id )};
-
-//  if ( imageData.img.data == nullptr )
-//    return {QByteArray()};
-
-//  make_hyperbolic( imageData, projType, size );
-
-//  return toByteArray( QImage{makeImage( imageData.img )} );
-//}
-
 QByteArray RequestDispatcher::makeHyperbolic( const QString& id, int size,  int projType )
 {
   auto& imageData { getOldImageData( id )};
