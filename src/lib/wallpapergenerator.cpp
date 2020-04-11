@@ -17,7 +17,7 @@ QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
 {
 
   try {
-    switch ( auto imageType = random_range_inclusive( 0, 8 ); imageType ) {
+    switch ( auto imageType = random_range_inclusive( 0, 11 ); imageType ) {
     case 0:
       generate_clouds( imageData );
       break;
@@ -52,6 +52,18 @@ QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
 
     case 8:
       generate_walk( imageData ) ;
+      break;
+
+    case 9:
+      generate_trap( imageData ) ;
+      break;
+
+    case 10:
+      generate_quasitrap( imageData ) ;
+      break;
+
+    case 11:
+      generate_quasitrap_poly( imageData ) ;
       break;
     }
   } catch ( const std::exception& e ) {
@@ -145,6 +157,6 @@ void WallpaperGenerator::generate_lines( ImageData& imageData )
   QString rule3 { ruleNames.at( random_range_inclusive( 0, ruleNamesMax ) ) };
   int weight3 {random_range_inclusive( 1, 5 ) };
   paint_lines( imageData, IMAGE_SIZE, random_symmmetryGroup(), 20,
-               rule1, weight1, true, rule2, weight2, true, rule3, weight3, true );
+               rule1, weight1, false, rule2, weight2, false, rule3, weight3, false );
 }
 
