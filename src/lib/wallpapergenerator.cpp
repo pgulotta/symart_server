@@ -11,7 +11,7 @@
 #include "imagedata.hpp"
 #include <QByteArray>
 
-static const int IMAGE_SIZE = 256;
+static const int IMAGE_SIZE = 768;
 
 QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
 {
