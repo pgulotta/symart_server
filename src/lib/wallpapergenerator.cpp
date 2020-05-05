@@ -12,12 +12,14 @@
 #include <QByteArray>
 
 static const int IMAGE_SIZE = 768;
+static const int PERIOD_LOWER_LIMIT = 64;
+static const int PERIOD_UPPER_LIMIT = 384;
 
 QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
 {
 
   try {
-    switch ( auto imageType = random_range_inclusive( 0, 11 ); imageType ) {
+    switch ( auto imageType = random_range_inclusive( 0, 10 ); imageType ) {
     case 0:
       generate_clouds( imageData );
       break;
@@ -55,14 +57,10 @@ QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
       break;
 
     case 9:
-      generate_trap( imageData ) ;
-      break;
-
-    case 10:
       generate_quasitrap( imageData ) ;
       break;
 
-    case 11:
+    case 10:
       generate_quasitrap_poly( imageData ) ;
       break;
     }
@@ -86,15 +84,15 @@ void WallpaperGenerator::generate_quasitrap( ImageData& imageData )
   qInfo() << RequestDispatcher::now() << Q_FUNC_INFO ;
   color_t color{randomColor()};
   drawquasitrap( imageData, color.red, color.green, color.blue, IMAGE_SIZE, IMAGE_SIZE, random_range_inclusive( 0, 3 ),
-                 random_real_range_inclusive( IMAGE_SIZE / 8, IMAGE_SIZE ) );
+                 random_range_inclusive( PERIOD_LOWER_LIMIT, PERIOD_UPPER_LIMIT ) );
 }
 
 void WallpaperGenerator::generate_quasitrap_poly( ImageData& imageData )
 {
   qInfo() << RequestDispatcher::now() << Q_FUNC_INFO ;
   color_t color{randomColor()};
-  drawquasitrap_poly( imageData, color.red, color.green, color.blue, IMAGE_SIZE, IMAGE_SIZE, random_range_inclusive( 0,
-                      3 ), random_real_range_inclusive( IMAGE_SIZE / 8, IMAGE_SIZE ) );
+  drawquasitrap_poly( imageData, color.red, color.green, color.blue, IMAGE_SIZE, IMAGE_SIZE,
+                      random_range_inclusive( 0, 3 ), random_range_inclusive( PERIOD_LOWER_LIMIT, PERIOD_UPPER_LIMIT ) );
 }
 
 void WallpaperGenerator::generate_squiggles( ImageData& imageData )
