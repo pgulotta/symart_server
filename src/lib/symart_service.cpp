@@ -58,11 +58,6 @@ QByteArray makeHyperbolic( const QString& id,  int size,  int projType )
   return requestDispatcher.makeHyperbolic( id, size, projType );
 }
 
-void loadColorsImage( const QString& id, const QByteArray& byteArray )
-{
-  requestDispatcher.loadColorsImage( id, byteArray );
-}
-
 bool canTileImage( const QString& id )
 {
   return requestDispatcher.canTileImage( id );

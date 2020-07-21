@@ -229,29 +229,6 @@ private:
     }
   }
 
-  void imageColorsHandler( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
-  {
-    Q_UNUSED ( request )
-    Q_UNUSED ( response )
-    qDebug() << Q_FUNC_INFO << "Use of an image palette is not yet supported.";
-
-//    bool success{false};
-
-//    try {
-//      auto payload =  request.query().parameters()[3];
-
-//      loadColorsImage( QTextCodec::codecForMib( 2259 )->fromUnicode( payload.c_str() ) );
-//      success = true;
-//    } catch ( const std::exception ) { }
-
-
-//    if ( !success ) {
-//      response.send( Pistache::Http::Code::Bad_Request, request.query().as_str() +
-//                     " is not a valid  request. To test the API, enter the request: /ready" );
-
-//    }
-  }
-
   void askHandler( const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response )
   {
     bool success = false;
@@ -328,7 +305,6 @@ private:
     Routes::Get( router,  "/ask", Routes::bind( &SymArtEndpoint::askHandler,  this ) );
     Routes::Get( router,  "/get", Routes::bind( &SymArtEndpoint::getHandler,  this ) );
     Routes::Get( router,  "/test", Routes::bind( &SymArtEndpoint::testHandler,  this ) );
-    Routes::Get( router, "/imageColors", Routes::bind( &SymArtEndpoint::imageColorsHandler,  this ) );
     Routes::Get( router, "/wallpaper", Routes::bind( &SymArtEndpoint::wallpaperHandler,  this ) );
   }
 

@@ -8,6 +8,7 @@
 #include "randomize.hpp"
 #include "symmetric_canvas.hpp"
 #include "wallpapergenerator.hpp"
+#include <chrono>
 #include <QImage>
 #include <QBuffer>
 #include <QDebug>
@@ -23,7 +24,8 @@ using uniq_lck = std::unique_lock<std::shared_mutex>;
 ImageMetaData emptyImageMetaData;
 QImage emptyImage;
 
-const qint64  PurgeImagesTimerIntervalMs {900000};  // 15 Minutes =900,000 Milliseconds
+//const auto  PurgeImagesTimerIntervalMs = std::chrono::hours(1);
+const qint64  PurgeImagesTimerIntervalMs {3600000};  // 1 hour
 //const qint64  PurgeImagesTimerIntervalMs {60000};  // 1 Minute
 
 RequestDispatcher::RequestDispatcher( )
@@ -204,19 +206,6 @@ QByteArray RequestDispatcher::randomizeTiles( const QString& id, int xtiles, int
   const auto canvasView = std::make_shared<wrap_canvas<color_t>>( img );
 
   return toByteArray( makeImage( canvasView ) );
-}
-
-void RequestDispatcher::loadColorsImage( const QString& id, const QByteArray& byteArray )
-{
-  qDebug() << Q_FUNC_INFO << "byteArray.size()  =  " << byteArray.size();
-  uniq_lck l {shared_mut, std::defer_lock};
-
-  if ( l.try_lock() ) {
-    mColorsImagesById[id].image = fromByteArray( byteArray )  ;
-    mColorsImagesById[id].lastTouched = QDateTime::currentMSecsSinceEpoch();
-  }
-
-  qDebug() << Q_FUNC_INFO << " mColorsImage.isNull()=" << mColorsImagesById[id].image.isNull();
 }
 
 bool RequestDispatcher::canTileImage( const QString& id )

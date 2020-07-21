@@ -33,8 +33,6 @@ public:
 
   QByteArray makeHyperbolic( const QString& id, int size,  int projType );
 
-  void loadColorsImage( const QString& id, const QByteArray& byteArray );
-
   QByteArray generateWallpaper();
 
   QImage getColorsImage( const QString& id ) ;

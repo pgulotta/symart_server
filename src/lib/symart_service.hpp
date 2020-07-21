@@ -27,8 +27,6 @@ QByteArray randomizeTiles( const QString& id, int xtiles, int ytiles );
 
 QByteArray makeHyperbolic( const QString& id, int size,  int projType );
 
-void loadColorsImage( const QString& id, const QByteArray& byteArray );
-
 QByteArray generateWallpaper();
 
 QByteArray  updateSquiggles( const QString& id, int size, int symGroup );
