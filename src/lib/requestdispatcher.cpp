@@ -24,8 +24,7 @@ using uniq_lck = std::unique_lock<std::shared_mutex>;
 ImageMetaData emptyImageMetaData;
 QImage emptyImage;
 
-//const auto  PurgeImagesTimerIntervalMs = std::chrono::hours(1);
-const qint64  PurgeImagesTimerIntervalMs {3600000};  // 1 hour
+const qint64  PurgeImagesTimerIntervalMs {1800000};  // .5 hour
 //const qint64  PurgeImagesTimerIntervalMs {60000};  // 1 Minute
 
 RequestDispatcher::RequestDispatcher( )
