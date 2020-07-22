@@ -10,7 +10,7 @@ class QByteArray;
 class QImage;
 class QString;
 struct ImageMetaData;
-struct ColorsImage;
+
 
 class RequestDispatcher
 {
@@ -34,8 +34,6 @@ public:
   QByteArray makeHyperbolic( const QString& id, int size,  int projType );
 
   QByteArray generateWallpaper();
-
-  QImage getColorsImage( const QString& id ) ;
 
   QByteArray  updateSquiggles( const QString& id, int size, int symGroup );
 
@@ -101,20 +99,13 @@ private:
   ImageData& getNewImageData( const QString& id );
   ImageData& getOldImageData( const QString& id );
   std::tuple < int, int >purgeOldImageMetaData( const qint64& agedTimeMSecsSinceEpoch );
-  std::tuple < int, int >purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch );
   std::map<QString, ImageMetaData> mImageDataById;
-  std::map<QString, ColorsImage> mColorsImagesById;
   std::unique_ptr<PurgeImagesHandler> mPurgeImagesHandler{new PurgeImagesHandler};
 
 };
 
 struct ImageMetaData {
   ImageData imageData;
-  qint64 lastTouched;
-};
-
-struct ColorsImage {
-  QImage image;
   qint64 lastTouched;
 };
 

@@ -71,20 +71,6 @@ ImageData& RequestDispatcher::getNewImageData( const QString& id )
   }
 }
 
-QImage RequestDispatcher::getColorsImage( const QString& id )
-{
-  uniq_lck l {shared_mut, std::defer_lock};
-
-  if ( l.try_lock() ) {
-    mColorsImagesById.try_emplace( id, ColorsImage{} );
-    ColorsImage& colorsImage{mColorsImagesById.at( id )};
-    colorsImage.lastTouched = QDateTime::currentMSecsSinceEpoch();
-    return colorsImage.image;
-  } else {
-    return emptyImage;
-  }
-}
-
 std::tuple<int, int> RequestDispatcher::purgeOldImageMetaData( const qint64& agedTimeMSecsSinceEpoch )
 {
   int  totalCount{0};
@@ -109,28 +95,6 @@ std::tuple<int, int> RequestDispatcher::purgeOldImageMetaData( const qint64& age
   return  std::make_tuple( removedCount, totalCount );;
 }
 
-std::tuple < int, int >RequestDispatcher::purgeOldColorsImages( const qint64& agedTimeMSecsSinceEpoch )
-{
-  int  totalCount{0};
-  int  removedCount{0};
-  uniq_lck l {shared_mut, std::defer_lock};
-
-  if ( l.try_lock() ) {
-    totalCount = mColorsImagesById.size();
-
-    for ( const auto&[key, value] : mColorsImagesById ) {
-      const qint64 lastTouched = value.lastTouched;
-
-      if ( agedTimeMSecsSinceEpoch > lastTouched ) {
-        mColorsImagesById.erase( key );
-        removedCount++;
-      }
-    }
-  }
-
-  return  std::make_tuple( removedCount, totalCount );;
-}
-
 QString RequestDispatcher::now()
 {
   return QDateTime::currentDateTime().toString( Qt::DateFormat::ISODateWithMs ) ;
@@ -143,11 +107,8 @@ void RequestDispatcher::purgeOldImages()
 
   auto [ removedMetaData, totalMetaDataCount]  = purgeOldImageMetaData( agedTimeMSecsSinceEpoch );
 
-  auto [ removedImagesCount, totalImagesCount ]  = purgeOldColorsImages( agedTimeMSecsSinceEpoch );
-
   qInfo() << Q_FUNC_INFO << now() <<
-          "  Purged: Image MetaData = " << removedMetaData << "/" << totalMetaDataCount <<
-          ", Colors Images = " << removedImagesCount << "/" << totalImagesCount;
+          "  Purged: Image MetaData = " << removedMetaData << "/" << totalMetaDataCount ;
 }
 
 QByteArray RequestDispatcher::generateWallpaper()
@@ -240,15 +201,10 @@ QByteArray RequestDispatcher::paintSquiggles( const QString& id, int ncolors, in
   return toByteArray( QImage{makeImage( data.img )} );
 }
 
-QByteArray RequestDispatcher::paintSquiggles( const QString& id,
-                                              double saturationBoost, bool useHue, bool useSaturation,
-                                              bool useLightness, int ncolors, int size, int symGroup, double alpha, double exponent,
-                                              double thickness, double sharpness )
+QByteArray RequestDispatcher::paintSquiggles( const QString& id, double, bool, bool, bool, int ncolors, int size,
+                                              int symGroup, double alpha,  double exponent, double thickness, double sharpness )
 {
-  auto& data { getNewImageData( id )};
-  paint_squiggles( data, saturationBoost, useHue, useSaturation, useLightness, ncolors,
-                   size, symGroup,  alpha,  exponent,  thickness,  sharpness, getColorsImage( id ) );
-  return toByteArray( QImage{makeImage( data.img )} );
+  return paintSquiggles( id, ncolors,  size, symGroup, alpha, exponent, thickness,  sharpness );
 }
 
 QByteArray RequestDispatcher::updateSquiggles( const QString& id, int size, int symGroup )
