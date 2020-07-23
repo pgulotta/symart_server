@@ -19,7 +19,7 @@ QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
 {
 
   try {
-    switch ( auto imageType = random_range_inclusive( 0, 10 ); imageType ) {
+    switch ( auto imageType = random_range_inclusive( 0, 9 ); imageType ) {
     case 0:
       generate_clouds( imageData );
       break;
@@ -60,9 +60,6 @@ QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
       generate_quasitrap( imageData ) ;
       break;
 
-    case 10:
-      generate_quasitrap_poly( imageData ) ;
-      break;
     }
   } catch ( const std::exception& e ) {
     qWarning() << Q_FUNC_INFO << e.what();
