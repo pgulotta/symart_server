@@ -11,7 +11,7 @@
 #include "imagedata.hpp"
 #include <QByteArray>
 
-static const int IMAGE_SIZE = 768;
+static const int IMAGE_SIZE = 640;
 static const int PERIOD_LOWER_LIMIT = 64;
 static const int PERIOD_UPPER_LIMIT = 384;
 

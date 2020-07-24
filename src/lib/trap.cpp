@@ -475,6 +475,7 @@ using std::max;
 
 void drawtrap( ImageData& imageData, int colRed, int colGreen, int colBlue, int sz, int symGroup )
 {
+  print( Q_FUNC_INFO, colRed, colGreen, colBlue, sz, symGroup );
   symgroup sg{static_cast<symgroup>( symGroup )};
   symmetric_canvas<color_t> c( sz, sg );
   canvas<color_t>& cc = c.unsafe_get_canvas();
@@ -851,6 +852,7 @@ qpiterfunc random_qpiterfunc12()
 void drawquasitrap_poly( ImageData& imageData, int colRed, int colGreen, int colBlue, int width, int height,
                          int symmetryValueIndex, double quasiperiod )
 {
+  print( Q_FUNC_INFO, colRed, colGreen, colBlue, width, height, symmetryValueIndex, quasiperiod );
   canvas<color_t> c( width, height );
   double xr = random_angle(), yr = random_angle(), zr = random_angle(), wr = random_angle();
   double fct = 2.*M_PI / quasiperiod;
@@ -904,6 +906,7 @@ void drawquasitrap_poly( ImageData& imageData, int colRed, int colGreen, int col
 void drawquasitrap( ImageData& imageData, int colRed, int colGreen, int colBlue, int width, int height,
                     int symmetryValueIndex, double quasiperiod )
 {
+  print( Q_FUNC_INFO, colRed, colGreen, colBlue, width, height, symmetryValueIndex, quasiperiod );
   canvas<color_t> c( width, height );
   double xr = random_angle(), yr = random_angle(), zr = random_angle(), wr = random_angle();
   double fct = 2.*M_PI / quasiperiod;

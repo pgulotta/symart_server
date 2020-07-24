@@ -330,6 +330,7 @@ void generate_paths( C& cr, C& cg, C& cb, bool balanced )
 
 void draw_walk( ImageData& imageData, int width, int height, bool balanced, int walkFill )
 {
+  print( Q_FUNC_INFO, width, height, balanced, walkFill );
   walk_fill wf{static_cast<walk_fill > ( walkFill )};
   wrap_canvas<uint8_t> cr( width, height );
   wrap_canvas<uint8_t> cg( width, height );
@@ -351,6 +352,7 @@ void draw_walk( ImageData& imageData, int width, int height, bool balanced, int 
 
 void draw_walk2( ImageData& imageData, int width, int height, bool balanced, int walkFill )
 {
+  print( Q_FUNC_INFO, width, height, balanced, walkFill );
   walk_fill wf{static_cast<walk_fill> ( walkFill )};
   canvas<uint8_t> cr( width - 1, height - 1 );
   canvas<uint8_t> cg( width - 1, height - 1 );

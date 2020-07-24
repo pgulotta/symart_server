@@ -3,14 +3,36 @@
 #include <memory>
 #include <vector>
 #include <QImage>
-
+#include <string>
+#include <iostream>
 #include "color.hpp"
 #include "canvasview.hpp"
 #include "paintlinesadapter.hpp"
+#include <QDateTime>
+#include <string>
 
 struct layer;
 
+template<typename T>
+class AppendSpace
+{
+private:
+  T const& ref;                  // refer to argument passed in constructor
+public:
+  AppendSpace( T const& r ): ref( r )
+  {
+  }
+  friend std::ostream& operator<< ( std::ostream& os, AppendSpace<T> s )
+  {
+    return os << s.ref << ' '; // output passed argument and a space
+  }
+};
 
+template < typename... Args >
+void print ( Args... args )
+{
+  ( std::cout << ... << AppendSpace( args ) ) << '\n';
+}
 
 QImage makeImage( const CanvasView<color_t>& v );
 
