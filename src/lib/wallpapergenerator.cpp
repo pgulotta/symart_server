@@ -65,7 +65,7 @@ QByteArray WallpaperGenerator::getWallpaper( ImageData& imageData )
     qWarning() << Q_FUNC_INFO << e.what();
   }
 
-  return toByteArray( QImage{makeImage( imageData.img )} );
+  return toByteArray( makeImage( imageData.img ) );
 }
 
 

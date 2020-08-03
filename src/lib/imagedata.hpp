@@ -45,6 +45,12 @@ struct ImageData {
   template<typename U>
   ImageData( U&& c,  std::shared_ptr< std::vector<layer>> l,
              bool o = true ) : img( std::forward<U>( c ) ), layers( l ), original( o ) {}
+  void clear()
+  {
+      layers.reset();
+      layers = nullptr;
+  }
+
   CanvasView<color_t> img;
   std::shared_ptr< std::vector<layer>> layers;
   bool original;
