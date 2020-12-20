@@ -9,8 +9,6 @@ class QImage;
 
 const QString DefaultId{"defaultId"};
 
-void purgeOldImages();
-
 bool toBool( const QString& text );
 
 QString fromBool( bool text );

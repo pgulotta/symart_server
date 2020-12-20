@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "imagedata.hpp"
-#include "purgeimageshandler.hpp"
 #include <map>
 #include <tuple>
 
@@ -18,8 +17,6 @@ public:
   RequestDispatcher( );
 
   static QString now();
-
-  void purgeOldImages();
 
   bool canTileImage( const QString& id );
 
@@ -98,9 +95,7 @@ public:
 private:
   ImageData& getNewImageData( const QString& id );
   ImageData& getOldImageData( const QString& id );
-  std::tuple < int, int >purgeOldImageMetaData( const qint64& agedTimeMSecsSinceEpoch );
   std::map<QString, ImageMetaData> mImageDataById;
-  std::unique_ptr<PurgeImagesHandler> mPurgeImagesHandler{new PurgeImagesHandler};
 
 };
 

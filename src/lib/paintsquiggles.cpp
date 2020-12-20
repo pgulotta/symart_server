@@ -95,7 +95,7 @@ void fill( symmetric_canvas<uint8_t>* grid1, symmetric_canvas<uint8_t>* grid2,
 
 void  update_squiggles( ImageData& imageData, int size, int symGroup )
 {
-  print( Q_FUNC_INFO, size, symGroup );
+//  print( Q_FUNC_INFO, size, symGroup );
   symgroup sg{static_cast<symgroup>( symGroup )};
   symmetric_canvas<color_t> canvas( size, sg );
 
@@ -110,7 +110,7 @@ void  update_squiggles( ImageData& imageData, int size, int symGroup )
 void paint_squiggles( ImageData& imageData, int ncolors, int size, int symGroup, double alpha,
                       double exponent, double thickness, double sharpness )
 {
-  print( Q_FUNC_INFO, ncolors, size, symGroup, alpha, exponent, thickness, sharpness );
+//  print( Q_FUNC_INFO, ncolors, size, symGroup, alpha, exponent, thickness, sharpness );
   paint_squiggles( imageData,  0.0, 0, 0, 0,  ncolors, size, symGroup, alpha, exponent, thickness, sharpness,
                    noImage );
 

@@ -50,7 +50,7 @@ void random_levy_2d( double* d, double alpha, double scale )
 
 void paint_quasiperiodic_stripes( ImageData& imageData,  int size, int fftsize, double alpha )
 {
-  print( Q_FUNC_INFO, size, fftsize, alpha );
+//  print( Q_FUNC_INFO, size, fftsize, alpha );
   int halfsize2 = fftsize / 2 + 1;
   int fftsize2 = 2 * halfsize2;
   unique_ptr<double [], fftw_free_deleter<double>> array( check_alloc(

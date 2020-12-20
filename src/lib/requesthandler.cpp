@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QImage>
 #include <QStringList>
-#include <QTextCodec>
+//#include <QTextCodec>
 #include <thread>
 #include <iostream>
 #include <limits>
@@ -240,7 +240,7 @@ private:
 
         if ( query.length() > 0 ) {
           QString params = query.c_str();
-          QStringList list =  params.split( '/', QString::SkipEmptyParts );
+          QStringList list =  params.split( '/', Qt::SkipEmptyParts );
           auto functionId = list[0];
 
           if ( predicateFuncs.find( functionId ) != predicateFuncs.end() ) {
@@ -274,7 +274,7 @@ private:
 
         if ( query.length() > 0 ) {
           QString params = query.c_str();
-          QStringList list =  params.split( '/', QString::SkipEmptyParts );
+          QStringList list =  params.split( '/', Qt::SkipEmptyParts );
           auto functionId = list[0];
 
           if ( drawingGetFuncs.find( functionId ) != drawingGetFuncs.end() ) {

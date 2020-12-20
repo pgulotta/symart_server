@@ -532,8 +532,7 @@ void paint_clouds( ImageData& imageData,  int size, int symmmetryGroup, int col1
                    int col1Blue, int col2Red, int col2Green, int col2Blue,
                    int col3Red, int col3Green, int col3Blue, int distributionIndex )
 {
-  print( Q_FUNC_INFO, size, symmmetryGroup, col1Red, col1Green, col1Blue, col2Red,
-         col2Green, col2Blue, col3Red, col3Green, col3Blue, distributionIndex );
+  //print( Q_FUNC_INFO, size, symmmetryGroup, col1Red, col1Green, col1Blue, col2Red, col2Green, col2Blue, col3Red, col3Green, col3Blue, distributionIndex );
   const clouds_randfunc randfunc{randfuncs[distributionIndex]};
   symgroup symGroup = static_cast<symgroup>( symmmetryGroup );
   color_t col1{col1Red, col1Green, col1Blue};
@@ -662,8 +661,8 @@ void paint_hyperbolic_clouds( ImageData& imageData, int size, int fdfIndex, int 
                               int col1Blue, int col2Red, int col2Green, int col2Blue,
                               int col3Red, int col3Green, int col3Blue, int distributionIndex )
 {
-  print( Q_FUNC_INFO, size, fdfIndex, rotation0, rotation1, rotation2, rotation3, projType, col1Red, col1Green,
-         col1Blue, col2Red, col2Green, col2Blue, col3Red, col3Green, col3Blue, distributionIndex );
+//  print( Q_FUNC_INFO, size, fdfIndex, rotation0, rotation1, rotation2, rotation3, projType, col1Red, col1Green,
+//         col1Blue, col2Red, col2Green, col2Blue, col3Red, col3Green, col3Blue, distributionIndex );
   projtype pt = static_cast<projtype>( projType );
   color_t col1{col1Red, col1Green, col1Blue};
   color_t col2{col2Red, col2Green, col2Blue};

@@ -162,8 +162,7 @@ canvas<uint8_t> paint_hyperbolic_lines( const hyperbolic_symmetry_group& sg,
 void paint_hyperbolic_lines( ImageData& imageData,  int size, int fdfIndex, int rotation0, int rotation1, int rotation2,
                              int rotation3, int projType, int flipType, float thickness, float sharpness, int ncolors )
 {
-  print( Q_FUNC_INFO, size, fdfIndex, rotation0, rotation1, rotation2,
-         rotation3, projType, flipType, thickness, sharpness, ncolors );
+  //print( Q_FUNC_INFO, size, fdfIndex, rotation0, rotation1, rotation2, rotation3, projType, flipType, thickness, sharpness, ncolors );
   fundamental_domain_family family{fundamentalDomainFamily( fdfIndex )};
   std::vector<int> rotations;
   extractRotations( rotation0, rotation1, rotation2, rotation3, rotations );

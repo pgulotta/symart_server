@@ -3,7 +3,6 @@ LANGUAGE	= C++
 
 QT     +=  gui
 
-CONFIG +=  qt
 CONFIG +=  warn_on link_pkgconfig
 CONFIG +=  c++1z
 CONFIG +=  console

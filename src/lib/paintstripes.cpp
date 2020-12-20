@@ -64,7 +64,7 @@ symmetric_canvas<color_t> make_canvas( symgroup sym, const stripes_grid& gridr,
 
 void paint_stripes( ImageData& imageData, int sz, int symGroup, double alpha )
 {
-  print( Q_FUNC_INFO, sz, symGroup, alpha );
+//  print( Q_FUNC_INFO, sz, symGroup, alpha );
   symgroup sym{static_cast<symgroup>( symGroup )};
   stripes_grid gridr( sz, sym ), gridg( sz, sym ), gridb( sz, sym );
   stripes_grid_norm norm( sz, sym );
@@ -83,7 +83,7 @@ void paint_stripes( ImageData& imageData, int sz, int symGroup, double alpha )
 
 void paint_clusters( ImageData& imageData, int sz,  int symGroup, double alpha )
 {
-  print( Q_FUNC_INFO, sz, symGroup, alpha );
+//  print( Q_FUNC_INFO, sz, symGroup, alpha );
   symgroup sym{static_cast<symgroup>( symGroup )};
   stripes_grid gridr( sz, sym ), gridg( sz, sym ), gridb( sz, sym );
   stripes_grid_norm norm( sz, sym );

@@ -24,13 +24,9 @@ using uniq_lck = std::unique_lock<std::shared_mutex>;
 ImageMetaData emptyImageMetaData;
 QImage emptyImage;
 
-const qint64  PurgeImagesTimerIntervalMs {1800000};  // .5 hour
-//const qint64  PurgeImagesTimerIntervalMs {30000};  // .5 Minute
 
 RequestDispatcher::RequestDispatcher( )
 {
-  mPurgeImagesHandler->setAutoDelete( true );
-  QThreadPool::globalInstance()->start( mPurgeImagesHandler.get() );
 }
 
 
@@ -69,43 +65,9 @@ ImageData& RequestDispatcher::getNewImageData( const QString& id )
   }
 }
 
-std::tuple<int, int> RequestDispatcher::purgeOldImageMetaData( const qint64& agedTimeMSecsSinceEpoch )
-{
-  int  totalCount{0};
-  int  removedCount{0};
-  uniq_lck l {shared_mut, std::defer_lock};
-
-  if ( l.try_lock() ) {
-    totalCount = mImageDataById.size();
-
-    for (  auto&[key, value] : mImageDataById ) {
-      const qint64& lastTouched = value.lastTouched;
-
-      if ( agedTimeMSecsSinceEpoch > lastTouched ) {
-        value.imageData.clear();
-        mImageDataById.erase( key );
-        removedCount++;
-      }
-    }
-  }
-
-  return  std::make_tuple( removedCount, totalCount );;
-}
-
 QString RequestDispatcher::now()
 {
   return QDateTime::currentDateTime().toString( Qt::DateFormat::ISODateWithMs ) ;
-}
-
-void RequestDispatcher::purgeOldImages()
-{
-  auto agedTimeMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
-  QThread::msleep( PurgeImagesTimerIntervalMs );
-
-  auto [ removedMetaData, totalMetaDataCount]  = purgeOldImageMetaData( agedTimeMSecsSinceEpoch );
-
-  qInfo() << Q_FUNC_INFO << now() <<
-          "  Purged: Image MetaData = " << removedMetaData << "/" << totalMetaDataCount ;
 }
 
 QByteArray RequestDispatcher::generateWallpaper()

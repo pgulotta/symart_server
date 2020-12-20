@@ -64,9 +64,9 @@ void paint_lines( ImageData& imageData,  const QString& colorImagePath,  double 
                   const QString& ruleName2, int weight2, bool isPastel2,
                   const QString& ruleName3, int weight3, bool isPastel3 )
 {
-  print( Q_FUNC_INFO, colorImagePath.toStdString(), saturationBoost, useHue, useSaturation, useLightness,
-         size,  symmmetryGroup, ncolors, ruleName1.toStdString(), weight1,  isPastel1,
-         ruleName2.toStdString(), weight2, isPastel2, ruleName3.toStdString(), weight3, isPastel3 );
+//  print( Q_FUNC_INFO, colorImagePath.toStdString(), saturationBoost, useHue, useSaturation, useLightness,
+//         size,  symmmetryGroup, ncolors, ruleName1.toStdString(), weight1,  isPastel1,
+//         ruleName2.toStdString(), weight2, isPastel2, ruleName3.toStdString(), weight3, isPastel3 );
   QImage colorImage;
 
   if ( !colorImagePath.isEmpty() ) {
